@@ -115,7 +115,7 @@
                             <?php 
                                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                                     if($count_child[$i]->jumlah_anak=='0'){
-                                    echo anchor(site_url('kegiatan_rektorat/create/'.$kegiatan->id_unit.'/subkomponen/'.$value->id_komponen),'<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-default"  data-toggle="tooltip" title="Tambah Sub Komponen"'); 
+                                    echo anchor(site_url('kegiatan_rektorat/create/subkomponen/'.$value->id_komponen),'<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-default"  data-toggle="tooltip" title="Tambah Sub Komponen"'); 
                                     echo ' '; 
                                     }
                                 }

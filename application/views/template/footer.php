@@ -30,7 +30,7 @@
   <script src="<?= base_url('assets/plugins/iCheck/icheck.min.js');?>"></script>
 
   <!-- Filter Design -->
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
 
   <!-- AdminLTE App -->
   <!-- DataTables -->

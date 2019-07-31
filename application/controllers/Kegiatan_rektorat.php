@@ -148,7 +148,7 @@ class Kegiatan_rektorat extends CI_Controller
             $data['action'] =site_url('kegiatan_rektorat/create_action_komponen/'.$id);
             $data['page'] = 'kegiatan_rektorat/Kegiatan_rektorat_form_komponen';
         }elseif ($page=='subkomponen'){
-            $data['action'] =site_url('kegiatan/create_action_subkomponen/'.$id_unit.'/'.$id);
+            $data['action'] =site_url('kegiatan/create_action_subkomponen/'.$id);
             $data['page'] = 'kegiatan_rektorat/Kegiatan_rektorat_form_subkomponen';
         }else{
             $data['m_data'] = $this->m_dat_model->get_m_dat_induk('1');
@@ -214,7 +214,7 @@ class Kegiatan_rektorat extends CI_Controller
         }
     }
 
-    public function create_action_subkomponen($id_unit,$id=null) 
+    public function create_action_subkomponen($id=null) 
     {
         $this->_rules();
         $user = $this->ion_auth->user()->row();
@@ -230,44 +230,44 @@ class Kegiatan_rektorat extends CI_Controller
 		'satuan' => $this->input->post('satuan',TRUE),
 		'jumlah' => $this->input->post('jumlah',TRUE)
 	    );
-        if(! $this->Sub_komponen_model->is_exist($this->input->post('id_subkomponen'))){
-            $this->Sub_komponen_model->insert($data);
+        if(! $this->Sub_komponen_rektorat_model->is_exist($this->input->post('id_subkomponen'))){
+            $this->Sub_komponen_rektorat_model->insert($data);
           
             //update komponen
-            $id_komponen=$this->Komponen_model->get_id_komponen($id_unit);
+            $id_komponen=$this->Komponen_rektorat_model->get_id_komponen($id_unit);
             foreach ($id_komponen as $key => $value) {
-                if (!isset($this->Sub_komponen_model->sum_komponen($value->id_komponen)->sum)){
+                if (!isset($this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum)){
                     $sum_komponen = array(
                         'jumlah' => '0'
                     );
                 }else{
                     $sum_komponen = array(
-                        'jumlah' => $this->Sub_komponen_model->sum_komponen($value->id_komponen)->sum
+                        'jumlah' => $this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum
                     );
                 }
-                $this->Komponen_model->update($value->id_komponen,$sum_komponen);
+                $this->Komponen_rektorat_model->update($value->id_komponen,$sum_komponen);
             }
             
             //update sub output
-            $id_kegiatan=$this->Komponen_model->get_id_kegiatan($id_unit);
+            $id_kegiatan=$this->Komponen_rektorat_model->get_id_kegiatan($id_unit);
             foreach ($id_kegiatan as $key => $value) {
                 $sum_sub_output = array(
-                    'jumlah' => $this->Komponen_model->sum_sub_output($value->id_kegiatan)->sum
+                    'jumlah' => $this->Komponen_rektorat_model->sum_sub_output($value->id_kegiatan)->sum
                 );
-                $this->Kegiatan_model->update($value->id_kegiatan,$sum_sub_output);
+                $this->Kegiatan_rektorat_model->update($value->id_kegiatan,$sum_sub_output);
             }
 
             //update kegiatan
             for ($i=4;$i>1;$i--){
                 $sum = array(
-                    'jumlah' => $this->Kegiatan_model->sum($i,$id_unit)->sum
+                    'jumlah' => $this->Kegiatan_rektorat_model->sum($i,$id_unit)->sum
                 );
-                $id_kegiatan= $this->Kegiatan_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
-                $this->Kegiatan_model->update($id_kegiatan,$sum);
+                $id_kegiatan= $this->Kegiatan_rektorat_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
+                $this->Kegiatan_rektorat_model->update($id_kegiatan,$sum);
             }
 
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('kegiatan/'.$id_unit));
+            redirect(site_url('kegiatan_rektorat/'));
             }else{
                 $this->create();
                 $this->session->set_flashdata('message', 'Create Record Faild, id_kegiatan is exist');
