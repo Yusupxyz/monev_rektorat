@@ -267,7 +267,7 @@ class Kegiatan_rektorat extends CI_Controller
             }
 
             $this->session->set_flashdata('message', 'Create Record Success');
-            redirect(site_url('kegiatan_rektorat/'));
+            redirect(site_url('kegiatan_rektorat'));
             }else{
                 $this->create();
                 $this->session->set_flashdata('message', 'Create Record Faild, id_kegiatan is exist');
