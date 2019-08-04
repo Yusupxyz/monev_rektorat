@@ -157,10 +157,19 @@ function count_child($i,$b)
 {
     $result=$this->db->query (
         'SELECT count(*) as "jumlah_anak" FROM komponen 
-         -- LEFT join kegiatan on kegiatan.id_kegiatan = komponen.id_kegiatan 
          LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
          WHERE sub_komponen.id_komponen=(SELECT id_komponen from sub_komponen limit '.$i.',1)')->row();
     return $result;
+}
+
+// get jumlah anak dari unit by id
+function count_all_child($kode)
+{
+    $result=$this->db->query (
+        'SELECT count(*) as "jumlah_anak" FROM sub_komponen 
+        LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
+        WHERE komponen.kode_komponen="'.$kode.'"')->row();
+        return $result;
 }
 
     // count komponen

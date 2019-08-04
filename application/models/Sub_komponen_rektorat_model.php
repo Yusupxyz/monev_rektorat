@@ -68,7 +68,9 @@ class Sub_komponen_rektorat_model extends CI_Model
     function get_by_id_komponen($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM sub_komponen WHERE id_komponen = 
+            'SELECT * FROM sub_komponen_rektorat LEFT JOIN komponen_rektorat ON komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen
+            LEFT JOIN kegiatan_rektorat ON komponen_rektorat.id_kegiatan=kegiatan_rektorat.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan_rektorat.id_unit WHERE sub_komponen_rektorat.id_komponen = 
                 (select id_komponen from komponen_rektorat LEFT JOIN kegiatan_rektorat on 
                 komponen_rektorat.id_kegiatan = kegiatan_rektorat.id_kegiatan where kegiatan_rektorat.id_unit = '.$b.' 
                 AND kegiatan_rektorat.id_tahun = '.$tahun.'

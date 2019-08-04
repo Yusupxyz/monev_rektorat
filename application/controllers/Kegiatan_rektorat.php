@@ -17,6 +17,7 @@ class Kegiatan_rektorat extends CI_Controller
         $this->load->model('Kegiatan_rektorat_model');
         $this->load->library('form_validation');
         $this->load->model('Komponen_rektorat_model');
+        $this->load->model('Komponen_model');
         $this->load->model('Sub_komponen_rektorat_model');
         $this->load->model('Tahun_model');
         $this->load->model('Users_model');
@@ -57,9 +58,11 @@ class Kegiatan_rektorat extends CI_Controller
         for ($i=0;$i<$this->Komponen_rektorat_model->count_komponen($b)->count;$i++){
             $count_child_komponen[] =$this->Komponen_rektorat_model->count_child($i,$b);
             $subkomponen[] = $this->Sub_komponen_rektorat_model->get_by_id_komponen($i,$b,$this->tahun);
+            $count_child_komponen_unit[] =$this->Komponen_rektorat_model->count_child_unit($i,$b);
+            // $subkomponenunit[] = $this->Sub_komponen_rektorat_model->get_by_id_komponen($i,$b,$this->tahun);
         }
 
-        // echo "<pre>"; print_r($count_child);echo"</pre>";
+        echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
@@ -148,7 +151,7 @@ class Kegiatan_rektorat extends CI_Controller
             $data['action'] =site_url('kegiatan_rektorat/create_action_komponen/'.$id);
             $data['page'] = 'kegiatan_rektorat/Kegiatan_rektorat_form_komponen';
         }elseif ($page=='subkomponen'){
-            $data['action'] =site_url('kegiatan/create_action_subkomponen/'.$id);
+            $data['action'] =site_url('kegiatan_rektorat/create_action_subkomponen/'.$id);
             $data['page'] = 'kegiatan_rektorat/Kegiatan_rektorat_form_subkomponen';
         }else{
             $data['m_data'] = $this->m_dat_model->get_m_dat_induk('1');
@@ -233,38 +236,38 @@ class Kegiatan_rektorat extends CI_Controller
         if(! $this->Sub_komponen_rektorat_model->is_exist($this->input->post('id_subkomponen'))){
             $this->Sub_komponen_rektorat_model->insert($data);
           
-            //update komponen
-            $id_komponen=$this->Komponen_rektorat_model->get_id_komponen($id_unit);
-            foreach ($id_komponen as $key => $value) {
-                if (!isset($this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum)){
-                    $sum_komponen = array(
-                        'jumlah' => '0'
-                    );
-                }else{
-                    $sum_komponen = array(
-                        'jumlah' => $this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum
-                    );
-                }
-                $this->Komponen_rektorat_model->update($value->id_komponen,$sum_komponen);
-            }
+            // //update komponen
+            // $id_komponen=$this->Komponen_rektorat_model->get_id_komponen($id_unit);
+            // foreach ($id_komponen as $key => $value) {
+            //     if (!isset($this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum)){
+            //         $sum_komponen = array(
+            //             'jumlah' => '0'
+            //         );
+            //     }else{
+            //         $sum_komponen = array(
+            //             'jumlah' => $this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum
+            //         );
+            //     }
+            //     $this->Komponen_rektorat_model->update($value->id_komponen,$sum_komponen);
+            // }
             
-            //update sub output
-            $id_kegiatan=$this->Komponen_rektorat_model->get_id_kegiatan($id_unit);
-            foreach ($id_kegiatan as $key => $value) {
-                $sum_sub_output = array(
-                    'jumlah' => $this->Komponen_rektorat_model->sum_sub_output($value->id_kegiatan)->sum
-                );
-                $this->Kegiatan_rektorat_model->update($value->id_kegiatan,$sum_sub_output);
-            }
+            // //update sub output
+            // $id_kegiatan=$this->Komponen_rektorat_model->get_id_kegiatan($id_unit);
+            // foreach ($id_kegiatan as $key => $value) {
+            //     $sum_sub_output = array(
+            //         'jumlah' => $this->Komponen_rektorat_model->sum_sub_output($value->id_kegiatan)->sum
+            //     );
+            //     $this->Kegiatan_rektorat_model->update($value->id_kegiatan,$sum_sub_output);
+            // }
 
-            //update kegiatan
-            for ($i=4;$i>1;$i--){
-                $sum = array(
-                    'jumlah' => $this->Kegiatan_rektorat_model->sum($i,$id_unit)->sum
-                );
-                $id_kegiatan= $this->Kegiatan_rektorat_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
-                $this->Kegiatan_rektorat_model->update($id_kegiatan,$sum);
-            }
+            // //update kegiatan
+            // for ($i=4;$i>1;$i--){
+            //     $sum = array(
+            //         'jumlah' => $this->Kegiatan_rektorat_model->sum($i,$id_unit)->sum
+            //     );
+            //     $id_kegiatan= $this->Kegiatan_rektorat_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
+            //     $this->Kegiatan_rektorat_model->update($id_kegiatan,$sum);
+            // }
 
             $this->session->set_flashdata('message', 'Create Record Success');
             redirect(site_url('kegiatan_rektorat'));

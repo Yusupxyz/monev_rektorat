@@ -24,16 +24,26 @@ class Komponen_rektorat_model extends CI_Model
         return $result;
     }
 
-// get jumlah anak by id
-function count_child($i,$b)
-{
-    $result=$this->db->query (
-        'SELECT count(*) as "jumlah_anak" FROM komponen 
-         -- LEFT join kegiatan on kegiatan.id_kegiatan = komponen.id_kegiatan 
-         LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
-         WHERE sub_komponen.id_komponen=(SELECT id_komponen from sub_komponen limit '.$i.',1)')->row();
-    return $result;
-}
+    // get jumlah anak by id
+    function count_child($i,$b)
+    {
+        $result=$this->db->query (
+            'SELECT count(*) as "jumlah_anak" FROM komponen_rektorat 
+            LEFT join sub_komponen_rektorat on komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen 
+            WHERE sub_komponen_rektorat.id_komponen=(SELECT id_komponen from sub_komponen_rektorat limit '.$i.',1)')->row();
+        return $result;
+    }
+
+    // get jumlah anak by id
+    function count_child_unit($i,$b)
+    {
+        $result=$this->db->query (
+            'SELECT count(*) as "jumlah_anak" FROM komponen_rektorat 
+            LEFT join sub_komponen_rektorat on komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen 
+            WHERE sub_komponen_rektorat.id_komponen=(SELECT id_komponen from sub_komponen_rektorat limit '.$i.',1)')->row();
+        return $result;
+    }
+    
 
     // get all
     function get_all()
@@ -53,9 +63,20 @@ function count_child($i,$b)
     function get_by_id_kegiatan($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM komponen_rektorat WHERE id_kegiatan = 
+            'SELECT * FROM komponen_rektorat LEFT JOIN kegiatan_rektorat ON komponen_rektorat.id_kegiatan=kegiatan_rektorat.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan_rektorat.id_unit WHERE komponen_rektorat.id_kegiatan = 
                      (select id_kegiatan from kegiatan_rektorat where id_unit='.$b.' AND id_tahun='.$tahun.' limit '.$i.',1)')->result();
         return $result;
+    }
+
+    // get id by group by id_kegiatan
+    function get_id_komponen($id)
+    {
+        $this->db->select('komponen_rektorat.id_komponen, kode_komponen, komponen_rektorat.uraian_kegiatan');
+        $this->db->join('kegiatan_rektorat','kegiatan_rektorat.id_kegiatan=komponen_rektorat.id_kegiatan','left');
+        $this->db->where('kegiatan_rektorat.id_unit',$id);
+        $this->db->group_by('id_komponen');
+        return $this->db->get($this->table)->result();
     }
     
     // get total rows

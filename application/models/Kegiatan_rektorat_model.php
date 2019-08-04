@@ -41,13 +41,12 @@ class Kegiatan_rektorat_model extends CI_Model
     // get data with limit and search
     function get_limit_data($limit, $start = 0, $q = NULL,$i,$tahun) {
         $this->db->like('id_kegiatan', $q);
-	
-    $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode');
-    // $this->db->where()
-     $this->db->where('kegiatan_rektorat.id_unit',$i);
-     $this->db->where('kegiatan_rektorat.id_tahun',$tahun);
-	$this->db->limit($limit, $start);
-	$this->db->order_by('kode_m_dat', 'ASC');
+        $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode');
+        $this->db->join('unit', 'kegiatan_rektorat.id_unit=unit.id_unit');
+        $this->db->where('kegiatan_rektorat.id_unit',$i);
+        $this->db->where('kegiatan_rektorat.id_tahun',$tahun);
+        $this->db->limit($limit, $start);
+        $this->db->order_by('kode_m_dat', 'ASC');
         return $this->db->get($this->table)->result();
     }
 
@@ -94,8 +93,8 @@ class Kegiatan_rektorat_model extends CI_Model
         $this->db->where_in($this->id, $arr_id);
         return $this->db->delete($this->table);
     }
-//check pk data is exists 
 
+    //check pk data is exists 
         function is_exist($id){
          $query = $this->db->get_where($this->table, array($this->id => $id));
          $count = $query->num_rows();

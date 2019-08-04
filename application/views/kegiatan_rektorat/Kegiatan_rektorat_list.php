@@ -57,6 +57,7 @@
 		<th>Rencana Capaian</th>
 		<th>Realisasi Capaian Fisik</th>
 		<th>Realisasi Jumlah Capaian</th>
+		<th>Unit</th>
 		<th>Action</th>
             </tr><?php
             $i=0;
@@ -79,6 +80,7 @@
 			<td><?php echo $kegiatan->rencana_capaian."%" ?></td>
 			<td><?php echo $kegiatan->capaian."%" ?></td>
 			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+			<td><?php echo $kegiatan->deskripsi ?></td>
 			<td style="text-align:center" width="200px">
                 <?php 
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
@@ -104,13 +106,14 @@
                                 ?>
                         <tr>
                             <td></td>
-                            <td></td>
+                            <td>*komponen</td>
                             <td><?php echo $value->kode_komponen; ?></td>
                             <td><?php echo $value->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
                             <td><?php echo $value->rencana_capaian."%" ?></td>
                             <td><?php echo $value->capaian."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td><?php echo $value->deskripsi ?></td>
                             <td style="text-align:center" width="200px">
                             <?php 
                                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
@@ -144,6 +147,7 @@
                             <td><?php echo $value1->rencana_capaian."%" ?></td>
                             <td><?php echo $value1->capaian."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td><?php echo $value1->deskripsi ?></td>
                             <td style="text-align:center" width="200px">
                             <?php if ($group_id==""){
                                 echo anchor(site_url('kegiatan_rektorat/update/'.$value1->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
