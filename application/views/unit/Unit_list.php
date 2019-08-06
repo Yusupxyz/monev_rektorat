@@ -2,7 +2,7 @@
 <div class="col-xs-12">
     <div class="box">
       <div class="box-header">
-        <h3 class="box-title">List Unit</h3>
+        <h3 class="box-title">Daftar Unit</h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                     title="Collapse">
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="col-xs-12 col-md-4 text-right">
-		<?php echo anchor(site_url('unit/printdoc'), '<i class="fa fa-print"></i> Print Preview', 'class="btn bg-maroon"'); ?>
+		<!-- <?php echo anchor(site_url('unit/printdoc'), '<i class="fa fa-print"></i> Print Preview', 'class="btn bg-maroon"'); ?> -->
 	    
          </div>
         </div>

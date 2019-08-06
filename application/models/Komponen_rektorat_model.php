@@ -34,13 +34,13 @@ class Komponen_rektorat_model extends CI_Model
         return $result;
     }
 
-    // get jumlah anak by id
+    // get jumlah anak unit by id
     function count_child_unit($i,$b)
     {
         $result=$this->db->query (
             'SELECT count(*) as "jumlah_anak" FROM komponen_rektorat 
-            LEFT join sub_komponen_rektorat on komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen 
-            WHERE sub_komponen_rektorat.id_komponen=(SELECT id_komponen from sub_komponen_rektorat limit '.$i.',1)')->row();
+            LEFT join sub_komponen on komponen_rektorat.id_komponen=sub_komponen.id_komponen 
+            WHERE komponen_rektorat.kode_komponen=(SELECT kode_komponen from sub_komponen limit '.$i.',1)')->row();
         return $result;
     }
     

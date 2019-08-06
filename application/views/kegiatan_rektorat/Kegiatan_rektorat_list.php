@@ -96,6 +96,7 @@
 			</td>
 		</tr>
         <?php 
+        //Komponen
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child[$i]->jumlah_anak=='0'){
                        
@@ -131,6 +132,7 @@
                         
                    <?php
 
+            //subkomponen rektorat
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child_komponen[$j]->jumlah_anak !='0'){
                         if (isset($subkomponen[$j][0])){ 
@@ -155,9 +157,9 @@
                                 echo anchor(site_url('kegiatan_rektorat/delete/'.$value1->id_subkomponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
                              }else{
                                  if ($group_id=="2"){
-                                    echo anchor(site_url('realisasi/'.$value1->id_subkomponen.'/'.$id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
+                                    echo anchor(site_url('realisasi_rektorat/'.$value1->id_subkomponen.'/'.$id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
                                  }else{
-                                    echo anchor(site_url('realisasi/'.$value1->id_subkomponen),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
+                                    echo anchor(site_url('realisasi_rektorat/'.$value1->id_subkomponen),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
                                  }
                              } ?>
                             </td>
@@ -165,6 +167,42 @@
                         
                    <?php
                         }}                        }
+                        //subkomponen unit
+                        if($count_child_komponen_unit[$j]->jumlah_anak !='0'){
+                            if (isset($subkomponenunit[$j][0])){ 
+                                foreach ($subkomponenunit[$j] as $key => $value2) { 
+                                $jumlah = $value2->jumlah; 
+                                $jumlah_capaian = $value2->jumlah_capaian;
+                                ?>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><?php echo $value2->kode_subkomponen; ?></td>
+                                <td><?php echo $value2->uraian_kegiatan; ?></td>
+                                <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
+                                <td><?php echo $value2->rencana_capaian."%" ?></td>
+                                <td><?php echo $value2->capaian."%" ?></td>
+                                <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                                <td><?php echo $value2->deskripsi ?></td>
+                                <td style="text-align:center" width="200px">
+                                <!-- <?php if ($group_id==""){
+                                    echo anchor(site_url('kegiatan_rektorat/update/'.$value2->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
+                                    echo ' '; 
+                                    echo anchor(site_url('kegiatan_rektorat/delete/'.$value2->id_subkomponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
+                                 }else{
+                                     if ($group_id=="2"){
+                                        echo anchor(site_url('realisasi/'.$value2->id_subkomponen.'/'.$id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
+                                     }else{
+                                        echo anchor(site_url('realisasi/'.$value2->id_subkomponen),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
+                                     }
+                                 } 
+                                 ?> -->
+                                </td>
+                            </tr> 
+                            
+                       <?php
+                            }}                        }
+                        
                     }
                     $j++;
                 }

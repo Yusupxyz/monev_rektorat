@@ -57,6 +57,7 @@ $route['kegiatan/(:num)'] = 'kegiatan/index/$1';
 $route['kegiatan/(:num)/(:any)'] = 'kegiatan/index/$1/$2';
 $route['realisasi/(:num)'] = 'realisasi/index/$1';
 $route['realisasi/(:num)/(:any)'] = 'realisasi/index/$1/$2';
+$route['realisasi_rektorat/(:num)'] = 'realisasi_rektorat/index/$1';
 
 $route['login'] = 'auth/login';
 $route['user'] = 'users';

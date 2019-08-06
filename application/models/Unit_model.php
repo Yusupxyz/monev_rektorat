@@ -19,6 +19,7 @@ class Unit_model extends CI_Model
     function json() {
         $this->datatables->select('id_unit,nama,deskripsi');
         $this->datatables->from('unit');
+        $this->datatables->where('id_unit!=', '0');
         //add this line for join
         //$this->datatables->join('table2', 'unit.field = table2.field');
         $this->datatables->

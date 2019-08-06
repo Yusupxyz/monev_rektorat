@@ -63,6 +63,17 @@ class Sub_komponen_model extends CI_Model
         return $result;
     }
 
+    // get data by id_komponen
+    function get_by_id_komponen_rektorat($i,$b,$tahun)
+    {
+        $result=$this->db->query (
+            'SELECT * FROM sub_komponen LEFT JOIN komponen ON sub_komponen.id_komponen=komponen.id_komponen LEFT JOIN kegiatan ON 
+                kegiatan.id_kegiatan=komponen.id_kegiatan LEFT JOIN unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
+                (select kode_komponen from komponen_rektorat LEFT JOIN kegiatan_rektorat on komponen_rektorat.id_kegiatan = kegiatan_rektorat.id_kegiatan 
+                where kegiatan_rektorat.id_tahun = '.$tahun.' limit '.$i.',1)')->result();
+        return $result;
+    }
+
     // realisasi capaian chart
     function chart($id_unit)
     {

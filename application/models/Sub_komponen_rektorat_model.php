@@ -29,6 +29,21 @@ class Sub_komponen_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
     
+    // get all data by id
+    function get_all_by_id($id)
+    {
+        $this->db->select('a.jenis as jenis_kegiatan, a.kode as kode_awal, a.ket as ket_awal, b.kode as kode_kegiatan, b.ket as ket_kegiatan, 
+                        c.volume as volume_kegiatan, c.satuan as satuan_kegiatan,
+                        sub_komponen_rektorat.kode_subkomponen as output_kode, sub_komponen_rektorat.uraian_kegiatan as output_ket');
+        $this->db->join('komponen_rektorat', 'komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen','left');
+        $this->db->join('kegiatan_rektorat', 'kegiatan_rektorat.id_kegiatan=komponen_rektorat.id_kegiatan','left');
+        $this->db->join('m_dat a', 'a.kode=kegiatan_rektorat.kode_m_dat','left');
+        $this->db->join('m_dat b', 'a.induk=b.kode','left');
+        $this->db->join('kegiatan_rektorat c', 'c.kode_m_dat=b.kode','left');
+        $this->db->where($this->id, $id);
+        return $this->db->get($this->table)->row();
+    }
+
     // get total rows
     function total_rows($q = NULL) {
         $this->db->like('id_subkomponen', $q);

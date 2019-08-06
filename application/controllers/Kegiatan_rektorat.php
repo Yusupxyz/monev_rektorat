@@ -19,6 +19,7 @@ class Kegiatan_rektorat extends CI_Controller
         $this->load->model('Komponen_rektorat_model');
         $this->load->model('Komponen_model');
         $this->load->model('Sub_komponen_rektorat_model');
+        $this->load->model('Sub_komponen_model');
         $this->load->model('Tahun_model');
         $this->load->model('Users_model');
         $this->tahun = $this->Tahun_model->get_by_aktif()->id_tahun;
@@ -54,15 +55,15 @@ class Kegiatan_rektorat extends CI_Controller
             $count_child[] =$this->Kegiatan_rektorat_model->count_child($i,$b,$this->tahun);
             $komponen[] = $this->Komponen_rektorat_model->get_by_id_kegiatan($i,$b,$this->tahun);
         }
-
+        $kode_komponen=$this->Komponen_rektorat_model->get_all();
         for ($i=0;$i<$this->Komponen_rektorat_model->count_komponen($b)->count;$i++){
             $count_child_komponen[] =$this->Komponen_rektorat_model->count_child($i,$b);
             $subkomponen[] = $this->Sub_komponen_rektorat_model->get_by_id_komponen($i,$b,$this->tahun);
             $count_child_komponen_unit[] =$this->Komponen_rektorat_model->count_child_unit($i,$b);
-            // $subkomponenunit[] = $this->Sub_komponen_rektorat_model->get_by_id_komponen($i,$b,$this->tahun);
+            $subkomponenunit[] = $this->Sub_komponen_model->get_by_id_komponen_rektorat($i,$b,$this->tahun);
         }
 
-        echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
+        // echo "<pre>"; print_r($subkomponenunit);echo"</pre>";
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
@@ -74,8 +75,10 @@ class Kegiatan_rektorat extends CI_Controller
             'start' => $start,
             'count_child' => $count_child,
             'count_child_komponen' => $count_child_komponen,
+            'count_child_komponen_unit' => $count_child_komponen_unit,
             'komponen' => $komponen,
             'subkomponen' => $subkomponen,
+            'subkomponenunit' => $subkomponenunit,
             'group_id' => $this->group_id,
             'id_unit' => $b
         );

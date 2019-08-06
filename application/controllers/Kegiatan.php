@@ -89,7 +89,7 @@ class Kegiatan extends CI_Controller
         ];
         $data['code_js'] = 'kegiatan/codejs';
         $data['page'] = 'kegiatan/Kegiatan_list';
-        if ($this->group_id==1 ){
+        if ($b=='0' ){
             redirect(site_url('kegiatan_rektorat'));
             // $data['page'] = 'notfound';
         }
