@@ -22,6 +22,9 @@ class Realisasi_rektorat extends CI_Controller
         $this->load->model('Kegiatan_model');
         $this->load->model('Komponen_model');
         $this->load->model('Sub_komponen_rektorat_model');
+        $this->load->model('Sub_komponen_model');
+        $this->load->model('Komponen_rektorat_model');
+        $this->load->model('Kegiatan_rektorat_model');
         $this->load->model('Setting_waktu_model');
         $this->load->library('form_validation');
         $this->user = $this->ion_auth->user()->row();
@@ -224,38 +227,51 @@ class Realisasi_rektorat extends CI_Controller
                 'keterangan' => $this->input->post('keterangan',TRUE),
             );
 
-            $this->Realisasi_model->update($id_realisasi, $data);
+            $this->Realisasi_rektorat_model->update($id_realisasi, $data);
 
-            //update capaian sub komponen
+            //update capaian sub komponen rektorat
             $data_capaian = array(
-                'rencana_capaian' => $this->Realisasi_model->sum_by_idsubkomponen($id_subkomponen)->sum_rencana,
-                'capaian' => $this->Realisasi_model->sum_by_idsubkomponen($id_subkomponen)->sum_realisasi,
-                'jumlah_capaian' => $this->Realisasi_model->sum_by_idsubkomponen($id_subkomponen)->sum_jumlah
+                'rencana_capaian' => $this->Realisasi_rektorat_model->sum_by_idsubkomponen($id_subkomponen)->sum_rencana,
+                'capaian' => $this->Realisasi_rektorat_model->sum_by_idsubkomponen($id_subkomponen)->sum_realisasi,
+                'jumlah_capaian' => $this->Realisasi_rektorat_model->sum_by_idsubkomponen($id_subkomponen)->sum_jumlah
             );
-            $this->Sub_komponen_model->update($id_subkomponen, $data_capaian);
+            $this->Sub_komponen_rektorat_model->update($id_subkomponen, $data_capaian);           
+            
+            //update capaian komponen dengan sum sub komponen unit
+            $id_komponen=$this->Sub_komponen_rektorat_model->get_idkomponen($id_subkomponen)->id_komponen;
+            $kode_komponen=$this->Sub_komponen_rektorat_model->get_idkomponen($id_subkomponen)->kode;
+            //sum rencana capaian unit ditambah sum rektorat
+            $rencana_capaian_unit=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_rencana;
+            $rencana_capaian_rektorat=$this->Sub_komponen_rektorat_model->sum_by_idkomponen($id_komponen)->sum_rencana;
+            $rencana_capaian=$rencana_capaian_unit+$rencana_capaian_rektorat;
+            //sum capaian unit ditambah sum rektorat
+            $capaian_unit=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_realisasi;
+            $capaian_rektorat=$this->Sub_komponen_rektorat_model->sum_by_idkomponen($id_komponen)->sum_realisasi;
+            $capaian=$capaian_unit+$capaian_rektorat;
+            //sum jumlah capaian unit ditambah sum rektorat
+            $jumlah_capaian_unit=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_jumlah;
+            $jumlah_capaian_rektorat=$this->Sub_komponen_rektorat_model->sum_by_idkomponen($id_komponen)->sum_jumlah;
+            $jumlah_capaian=$jumlah_capaian_unit+$jumlah_capaian_rektorat;
 
-            //update capaian komponen
-            $id_komponen=$this->Sub_komponen_model->get_idkomponen($id_subkomponen)->id_komponen;
             $data_subkomponen = array(
-                'rencana_capaian' => $this->Sub_komponen_model->sum_by_idkomponen($id_komponen)->sum_rencana,
-                'capaian' => $this->Sub_komponen_model->sum_by_idkomponen($id_komponen)->sum_realisasi,
-                'jumlah_capaian' => $this->Sub_komponen_model->sum_by_idkomponen($id_komponen)->sum_jumlah
+                'rencana_capaian' => $rencana_capaian,
+                'capaian' => $capaian,
+                'jumlah_capaian' => $jumlah_capaian
             );
-            $this->Komponen_model->update($id_komponen, $data_subkomponen);
+            $this->Komponen_rektorat_model->update($id_komponen, $data_subkomponen);
 
             //update capaian sub_output
-            $id_suboutput=$this->Komponen_model->get_idsuboutput($id_komponen)->id_kegiatan;
+            $id_suboutput=$this->Komponen_rektorat_model->get_idsuboutput($id_komponen)->id_kegiatan;
             $data_komponen = array(
-                'rencana_capaian' => $this->Komponen_model->sum_by_idsuboutput($id_suboutput)->sum_rencana,
-                'capaian' => $this->Komponen_model->sum_by_idsuboutput($id_suboutput)->sum_realisasi,
-                'jumlah_capaian' => $this->Komponen_model->sum_by_idsuboutput($id_suboutput)->sum_jumlah
-
+                'rencana_capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput)->sum_rencana,
+                'capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput)->sum_realisasi,
+                'jumlah_capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput)->sum_jumlah
             );
-            $this->Kegiatan_model->update($id_suboutput, $data_komponen);
+            $this->Kegiatan_rektorat_model->update($id_suboutput, $data_komponen);
 
             //update capaian kegiatan jenis 3/2
-            $jenis=$this->Kegiatan_model->get_by_id_join($id_suboutput)->jenis;
-            $kode=$this->Kegiatan_model->get_by_id_join($id_suboutput)->induk;
+            $jenis=$this->Kegiatan_rektorat_model->get_by_id_join($id_suboutput)->jenis;
+            $kode=$this->Kegiatan_rektorat_model->get_by_id_join($id_suboutput)->induk;
             $this->update_capaian_kegiatan($jenis,$kode);
 
             // //update capaian kegiatan jenis 2/1
@@ -269,7 +285,7 @@ class Realisasi_rektorat extends CI_Controller
             $this->update_capaian_kegiatan($jenis3,$kode3);
 
             $this->session->set_flashdata('message', 'Update Record Success');
-            redirect(site_url('realisasi/'.$this->input->post('id_subkomponen',TRUE)));
+            redirect(site_url('realisasi_rektorat/'.$this->input->post('id_subkomponen',TRUE)));
         }
     }
 
@@ -277,11 +293,11 @@ class Realisasi_rektorat extends CI_Controller
         if ($jenis!=1){
             $id_unit= $this->user->id_unit;
             $data_kegiatan = array(
-                'rencana_capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_rencana,
-                'capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_realisasi,
-                'jumlah_capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_jumlah
+                'rencana_capaian' => $this->Kegiatan_rektorat_model->sum_by_induk($kode)->sum_rencana,
+                'capaian' => $this->Kegiatan_rektorat_model->sum_by_induk($kode)->sum_realisasi,
+                'jumlah_capaian' => $this->Kegiatan_rektorat_model->sum_by_induk($kode)->sum_jumlah
             );
-            $this->Kegiatan_model->update_bykode($kode, $data_kegiatan,$id_unit);
+            $this->Kegiatan_rektorat_model->update_bykode($kode, $data_kegiatan,$id_unit);
         }
     }
 

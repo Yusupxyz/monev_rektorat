@@ -83,7 +83,7 @@ class Realisasi_rektorat_model extends CI_Model
 //check pk data is exists 
 
         function is_exist($id){
-         $query = $this->db->get_where($this->table, array('id_realisasi' => $id));
+         $query = $this->db->get_where($this->table, array('id_subkomponen' => $id));
          $count = $query->num_rows();
          if($count > 0){
             return true;
@@ -92,6 +92,13 @@ class Realisasi_rektorat_model extends CI_Model
          }
         }
 
+    // sum data by id subkomponen
+    function sum_by_idsubkomponen($id)
+    {
+        $this->db->select('sum(realisasi_capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(realisasi_jumlah) as sum_jumlah');
+        $this->db->where('id_subkomponen', $id);
+        return $this->db->get($this->table)->row();
+    }
 
 }
 

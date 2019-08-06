@@ -78,7 +78,7 @@
             {
                 ?>
             <tr>
-            <form id="form" method="post" action="<?= site_url('realisasi/update_action/'.$realisasi->id_realisasi);?>" >
+            <form id="form" method="post" action="<?= site_url('realisasi_rektorat/update_action/'.$realisasi->id_realisasi);?>" >
                 <td><input readonly  class="form-control" style="width: 90px"  value="<?php echo $realisasi->bulan ?>"></td>
                 <input name="id_subkomponen" hidden value="<?php echo $realisasi->id_subkomponen ?>">
                 <td><input readonly id="rencana_capaian<?= $i ?>" name="rencana_capaian" class="form-control" style="width: 60px" value="<?php echo $realisasi->rencana_capaian ?>"></td>
@@ -88,10 +88,8 @@
                 <td><textarea readonly id="uraian_hasil<?= $i ?>" name="uraian_hasil" class="form-control" rows="3" style="width: 190px" ><?php echo $realisasi->uraian_hasil ?></textarea></td>
                 <td><textarea readonly id="kendala<?= $i ?>" name="kendala" class="form-control" rows="3" style="width: 190px" ><?php echo $realisasi->kendala ?></textarea></td>
                 <td><textarea readonly id="keterangan<?= $i ?>" name="keterangan" class="form-control" rows="3" style="width: 170px" ><?php echo $realisasi->keterangan ?></textarea></td>
-                <?php if ($group_id=='4'){ ?>
                 <td style="text-align:center" width="100px">
                     <button class="btn btn-success" type="submit" onclick="cek()" id="submit"><i class="fa fa-save"></i> Simpan</button>
-                <?php } ?>
             </form>
 			</td>
 		</tr>

@@ -34,7 +34,6 @@ class Kegiatan extends CI_Controller
             $user = $this->ion_auth->user()->row();
             $this->group_id=$this->Users_model->get_group_id($user->id)->group_id;
         }
-       
         $q = urldecode($this->input->get('q', TRUE));
         $start = intval($this->input->get('start'));
         
@@ -64,7 +63,7 @@ class Kegiatan extends CI_Controller
             $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i,$b,$this->tahun);
         }
 
-        // echo "<pre>"; print_r($this->Kegiatan_model->count_kegiatan($b,$this->tahun)->count);echo"</pre>";
+        // echo "<pre>"; print_r($subkomponen);echo"</pre>";
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 

@@ -44,6 +44,15 @@ class Sub_komponen_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    // get id komponen by id subkomponen
+    function get_idkomponen($id)
+    {
+        $this->db->select('sub_komponen_rektorat.id_komponen ,komponen_rektorat.kode_komponen as kode');
+        $this->db->join('komponen_rektorat', 'komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen','left');
+        $this->db->where('id_subkomponen', $id);
+        return $this->db->get($this->table)->row();
+    }
+
     // get total rows
     function total_rows($q = NULL) {
         $this->db->like('id_subkomponen', $q);
@@ -83,7 +92,7 @@ class Sub_komponen_rektorat_model extends CI_Model
     function get_by_id_komponen($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM sub_komponen_rektorat LEFT JOIN komponen_rektorat ON komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen
+            'SELECT sub_komponen_rektorat.*, unit.* FROM sub_komponen_rektorat LEFT JOIN komponen_rektorat ON komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen
             LEFT JOIN kegiatan_rektorat ON komponen_rektorat.id_kegiatan=kegiatan_rektorat.id_kegiatan LEFT JOIN
             unit ON unit.id_unit=kegiatan_rektorat.id_unit WHERE sub_komponen_rektorat.id_komponen = 
                 (select id_komponen from komponen_rektorat LEFT JOIN kegiatan_rektorat on 
@@ -132,6 +141,22 @@ class Sub_komponen_rektorat_model extends CI_Model
          }
         }
 
+    // sum data by id subkomponen
+    function sum_by_idkomponen($id)
+    {
+        $this->db->select('sum(capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(jumlah_capaian) as sum_jumlah');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    // sum data by id subkomponen
+    function sum_by_kodekomponen($kode)
+    {
+        $this->db->select('sum(sub_komponen_rektorat.capaian) as sum_realisasi, sum(sub_komponen_rektorat.rencana_capaian) as sum_rencana, sum(sub_komponen_rektorat.jumlah_capaian) as sum_jumlah');
+        $this->db->join('komponen_rektorat','sub_komponen_rektorat.id_komponen=komponen_rektorat.id_komponen','left');
+        $this->db->where('kode_komponen', $kode);
+        return $this->db->get($this->table)->row();
+    }
 
 }
 

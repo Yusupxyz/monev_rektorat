@@ -48,7 +48,8 @@ class Sub_komponen_model extends CI_Model
     // get id komponen by id subkomponen
     function get_idkomponen($id)
     {
-        $this->db->select('id_komponen');
+        $this->db->select('sub_komponen.id_komponen ,komponen.kode_komponen as kode');
+        $this->db->join('komponen', 'komponen.id_komponen=sub_komponen.id_komponen','left');
         $this->db->where('id_subkomponen', $id);
         return $this->db->get($this->table)->row();
     }
@@ -57,7 +58,9 @@ class Sub_komponen_model extends CI_Model
     function get_by_id_komponen($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM sub_komponen WHERE id_komponen = 
+            'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON komponen.id_komponen=sub_komponen.id_komponen
+            LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan.id_unit WHERE sub_komponen.id_komponen = 
                 (select id_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_unit = '.$b.' AND kegiatan.id_tahun = '.$tahun.'
                   limit '.$i.',1)')->result();
         return $result;
@@ -67,7 +70,7 @@ class Sub_komponen_model extends CI_Model
     function get_by_id_komponen_rektorat($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM sub_komponen LEFT JOIN komponen ON sub_komponen.id_komponen=komponen.id_komponen LEFT JOIN kegiatan ON 
+            'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON sub_komponen.id_komponen=komponen.id_komponen LEFT JOIN kegiatan ON 
                 kegiatan.id_kegiatan=komponen.id_kegiatan LEFT JOIN unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
                 (select kode_komponen from komponen_rektorat LEFT JOIN kegiatan_rektorat on komponen_rektorat.id_kegiatan = kegiatan_rektorat.id_kegiatan 
                 where kegiatan_rektorat.id_tahun = '.$tahun.' limit '.$i.',1)')->result();
@@ -89,6 +92,15 @@ class Sub_komponen_model extends CI_Model
     {
         $this->db->select('sum(capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(jumlah_capaian) as sum_jumlah');
         $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    // sum data by id subkomponen
+    function sum_by_kodekomponen($kode)
+    {
+        $this->db->select('sum(sub_komponen.capaian) as sum_realisasi, sum(sub_komponen.rencana_capaian) as sum_rencana, sum(sub_komponen.jumlah_capaian) as sum_jumlah');
+        $this->db->join('komponen','sub_komponen.id_komponen=komponen.id_komponen','left');
+        $this->db->where('kode_komponen', $kode);
         return $this->db->get($this->table)->row();
     }
 

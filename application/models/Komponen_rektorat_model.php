@@ -59,11 +59,19 @@ class Komponen_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    
+    // get data by kode komponen
+    function get_by_kode($kode)
+    {
+        $this->db->where('kode_komponen', $kode);
+        return $this->db->get($this->table)->row();
+    }
+
     // get data by id_kegiatan
     function get_by_id_kegiatan($i,$b,$tahun)
     {
         $result=$this->db->query (
-            'SELECT * FROM komponen_rektorat LEFT JOIN kegiatan_rektorat ON komponen_rektorat.id_kegiatan=kegiatan_rektorat.id_kegiatan LEFT JOIN
+            'SELECT komponen_rektorat.*, unit.* FROM komponen_rektorat LEFT JOIN kegiatan_rektorat ON komponen_rektorat.id_kegiatan=kegiatan_rektorat.id_kegiatan LEFT JOIN
             unit ON unit.id_unit=kegiatan_rektorat.id_unit WHERE komponen_rektorat.id_kegiatan = 
                      (select id_kegiatan from kegiatan_rektorat where id_unit='.$b.' AND id_tahun='.$tahun.' limit '.$i.',1)')->result();
         return $result;
@@ -77,6 +85,14 @@ class Komponen_rektorat_model extends CI_Model
         $this->db->where('kegiatan_rektorat.id_unit',$id);
         $this->db->group_by('id_komponen');
         return $this->db->get($this->table)->result();
+    }
+
+    // get id komponen by id subkomponen
+    function get_idsuboutput($id)
+    {
+        $this->db->select('id_kegiatan');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
     }
     
     // get total rows
@@ -152,7 +168,14 @@ class Komponen_rektorat_model extends CI_Model
             return false;
          }
         }
-
+        
+// sum data by id kegiatan
+function sum_by_idsuboutput($id)
+{
+    $this->db->select('sum(capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(jumlah_capaian) as sum_jumlah');
+    $this->db->where('id_kegiatan', $id);
+    return $this->db->get($this->table)->row();
+}
 
 }
 

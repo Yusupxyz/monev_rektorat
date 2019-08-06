@@ -154,8 +154,8 @@
                                 echo ' '; 
                                 echo anchor(site_url('kegiatan/delete/'.$value1->id_subkomponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
                              }else{
-                                 if ($group_id=="2"){
-                                    echo anchor(site_url('realisasi/'.$value1->id_subkomponen.'/'.$id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
+                                 if ($group_id=="2" || $group_id=="1"){
+                                    echo anchor(site_url('realisasi/'.$value1->id_subkomponen.'/'.$value1->id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
                                  }else{
                                     echo anchor(site_url('realisasi/'.$value1->id_subkomponen),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
                                  }

@@ -28,6 +28,15 @@ class Kegiatan_rektorat_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
+
+
+    // get data by id join with m_dat
+    function get_by_id_join($id)
+    {
+        $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode');
+        $this->db->where($this->id, $id);
+        return $this->db->get($this->table)->row();
+    }
     
     // get total rows
     function total_rows($q = NULL,$i,$tahun) {
@@ -79,6 +88,14 @@ class Kegiatan_rektorat_model extends CI_Model
         $this->db->update($this->table, $data);
     }
 
+    // update data by kode m_dat
+    function update_bykode($id, $data, $id_unit)
+    {
+        $this->db->where('kode_m_dat', $id);
+        $this->db->where('id_unit', $id_unit);
+        $this->db->update($this->table, $data);
+    }
+
     // delete data
     function delete($id)
     {
@@ -105,6 +122,14 @@ class Kegiatan_rektorat_model extends CI_Model
          }
         }
 
+    // sum data by id kegiatan
+    function sum_by_induk($id)
+    {
+        $this->db->select('sum(capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(jumlah_capaian) as sum_jumlah');
+        $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode');
+        $this->db->where('induk', $id);
+        return $this->db->get($this->table)->row();
+    }
 
 }
 
