@@ -77,16 +77,6 @@ class Sub_komponen_model extends CI_Model
         return $result;
     }
 
-    // realisasi capaian chart
-    function chart($id_unit)
-    {
-        $this->db->select('sub_komponen.capaian as dataset, sub_komponen.kode_subkomponen as label');
-        $this->db->join('komponen','sub_komponen.id_komponen=komponen.id_komponen','left');
-        $this->db->join('kegiatan','komponen.id_kegiatan=kegiatan.id_kegiatan','left');
-        $this->db->where('kegiatan.id_unit', $id_unit);
-        return $this->db->get($this->table)->result();
-    }
-
     // sum data by id subkomponen
     function sum_by_idkomponen($id)
     {

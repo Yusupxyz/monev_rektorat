@@ -371,6 +371,223 @@ class Kegiatan extends CI_Controller
 	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
+    public function export($id_unit){
+        // Load plugin PHPExcel nya
+        include APPPATH.'third_party/PHPExcel-1.8/Classes/PHPExcel.php';
+        
+        // Panggil class PHPExcel nya
+        $excel = new PHPExcel();
+        // Settingan awal fil excel
+        $excel->getProperties()->setCreator('YH')
+                     ->setLastModifiedBy('YH')
+                     ->setTitle("RKAKL")
+                     ->setSubject("Unit")
+                     ->setDescription("Laporan Semua Data RKAKL")
+                     ->setKeywords("RKAKL Unit");
+        // Buat sebuah variabel untuk menampung pengaturan style dari header tabel
+        $style_col = array(
+          'alignment' => array(
+            'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+          ),
+          'borders' => array(
+            'top' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border top dengan garis tipis
+            'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+            'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN), // Set border bottom dengan garis tipis
+            'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+          )    
+        );
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row = array(
+          'alignment' => array(
+            'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+          ),
+          'borders' => array(
+            'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+            'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+          )
+        );
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row2 = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER, // Set text jadi ditengah secara horizontal (center)
+                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER // Set text jadi di tengah secara vertical (middle)
+            ),
+            'borders' => array(
+              'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+              'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+            )
+        );
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row3 = array(
+            'borders' => array(
+              'right' => array('style'  => PHPExcel_Style_Border::BORDER_THIN),  // Set border right dengan garis tipis
+              'left' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+            )
+        );
+
+        // Buat sebuah variabel untuk menampung pengaturan style dari isi tabel
+        $style_row4 = array(
+            'borders' => array(
+              'bottom' => array('style'  => PHPExcel_Style_Border::BORDER_THIN) // Set border left dengan garis tipis
+            )
+        );
+       
+        // Buat header tabel nya pada baris ke 3
+        $excel->setActiveSheetIndex(0)->setCellValue('A1', "kode"); // Set kolom A3 dengan tulisan "Kode"
+        $excel->setActiveSheetIndex(0)->setCellValue('B1', "uraian"); // Set kolom B3 dengan tulisan "Uraian"
+        $excel->setActiveSheetIndex(0)->setCellValue('C1', "jumlah"); // Set kolom C3 dengan tulisan "Jumlah"
+        $excel->setActiveSheetIndex(0)->setCellValue('D1', "rencana capaian"); // Set kolom D3 dengan tulisan "Rencana Capaian"
+        $excel->setActiveSheetIndex(0)->setCellValue('E1', "realisasi capaian fisik"); // Set kolom E3 dengan tulisan "ALAMAT"
+        $excel->setActiveSheetIndex(0)->setCellValue('F1', "realisasi jumlah capaian"); // Set kolom F3 dengan tulisan "ALAMAT"
+        // Apply style header yang telah kita buat tadi ke masing-masing kolom header
+        $excel->getActiveSheet()->getStyle('A1')->applyFromArray($style_col);
+        $excel->getActiveSheet()->getStyle('B1')->applyFromArray($style_col);
+        $excel->getActiveSheet()->getStyle('C1')->applyFromArray($style_col);
+        $excel->getActiveSheet()->getStyle('D1')->applyFromArray($style_col);
+        $excel->getActiveSheet()->getStyle('E1')->applyFromArray($style_col);
+        $excel->getActiveSheet()->getStyle('F1')->applyFromArray($style_col);
+        // Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
+        $b=$id_unit;
+        $kegiatan = $this->Kegiatan_model->get_limit_data('1000', '0', null,$b,$this->tahun);
+        for ($i=0;$i<$this->Kegiatan_model->count_kegiatan($b,$this->tahun)->count;$i++){
+            $count_child[] =$this->Kegiatan_model->count_child($i,$b,$this->tahun);
+            $komponen[] = $this->Komponen_model->get_by_id_kegiatan($i,$b,$this->tahun);
+        }
+
+        for ($i=0;$i<$this->Komponen_model->count_komponen($b)->count;$i++){
+            $count_child_komponen[] =$this->Komponen_model->count_child($i,$b);
+            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i,$b,$this->tahun);
+        }
+        // var_dump($count_child_komponen);
+        $numrow = 2; // Set baris pertama untuk isi tabel adalah baris ke 4
+        $i=0; // array cek komponen
+        $j=0; // array cek subkomponen
+        //data kegiatan rektorat
+        foreach($kegiatan as $data){ // Lakukan looping pada variabel kegiatan rektorat
+        $rencana_capaian=$data->rencana_capaian/100;
+        $capaian=$data->rencana_capaian/100;
+          $excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $data->kode_m_dat);
+          $excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $data->ket);
+          $excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $data->jumlah);
+          $excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $rencana_capaian);
+          $excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $capaian);
+          $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $data->jumlah_capaian);
+          
+          // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+          $excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
+          $excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row);
+          $excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row3);
+          $excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row2);
+          $excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row2);
+          $excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row3);
+          
+          $numrow++; // Tambah 1 setiap kali looping
+          // data komponen rektorat
+          if ($count_child[$i]->jumlah_anak=='0'){
+            if (isset($komponen[$i][0])){
+                foreach($komponen[$i] as $data => $value){ // Lakukan looping pada variabel komponen rektorat
+                    $rencana_capaian=$value->rencana_capaian/100;
+                    $capaian=$value->rencana_capaian/100;
+                    $excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $value->kode_komponen);
+                    $excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $value->uraian_kegiatan);
+                    $excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $value->jumlah);
+                    $excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $rencana_capaian);
+                    $excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $capaian);
+                    $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $value->jumlah_capaian);
+                    
+                    // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+                    $excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
+                    $excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row);
+                    $excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row3);
+                    $excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row2);
+                    $excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row2);
+                    $excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row3);
+                    
+                    $numrow++; // Tambah 1 setiap kali looping 
+
+                    // data sub komponen rektorat
+                    if ($count_child_komponen[$j]->jumlah_anak!='0'){
+                        if (isset($subkomponen[$j][0])){
+                            foreach($subkomponen[$j] as $data => $value_sub){ // Lakukan looping pada variabel sub komponen rektorat  
+                                $rencana_capaian=$value_sub->rencana_capaian/100;
+                                $capaian=$value_sub->rencana_capaian/100;
+                                $excel->setActiveSheetIndex(0)->setCellValue('A'.$numrow, $value_sub->kode_subkomponen);
+                                $excel->setActiveSheetIndex(0)->setCellValue('B'.$numrow, $value_sub->uraian_kegiatan);
+                                $excel->setActiveSheetIndex(0)->setCellValue('C'.$numrow, $value_sub->jumlah);
+                                $excel->setActiveSheetIndex(0)->setCellValue('D'.$numrow, $rencana_capaian);
+                                $excel->setActiveSheetIndex(0)->setCellValue('E'.$numrow, $capaian);
+                                $excel->setActiveSheetIndex(0)->setCellValue('F'.$numrow, $value_sub->jumlah_capaian);
+                                
+                                // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+                                $excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row);
+                                $excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row);
+                                $excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row3);
+                                $excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row2);
+                                $excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row2);
+                                $excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row3);
+                                
+                                $numrow++; // Tambah 1 setiap kali looping 
+
+                            }
+                        }
+                    }
+                    
+                   $j++; // tambah array cek sub komponen
+                }
+            }
+        }
+        $i++; // tambah array cek komponen
+        }
+        $numrow--;
+        // Set style row data terakhir
+        $excel->getActiveSheet()->getStyle('A'.$numrow)->applyFromArray($style_row4);
+        $excel->getActiveSheet()->getStyle('B'.$numrow)->applyFromArray($style_row4);
+        $excel->getActiveSheet()->getStyle('C'.$numrow)->applyFromArray($style_row4);
+        $excel->getActiveSheet()->getStyle('D'.$numrow)->applyFromArray($style_row4);
+        $excel->getActiveSheet()->getStyle('E'.$numrow)->applyFromArray($style_row4);
+        $excel->getActiveSheet()->getStyle('F'.$numrow)->applyFromArray($style_row4);
+
+        // Set width kolom
+        $excel->getActiveSheet()->getColumnDimension('A')->setWidth(15); // Set width kolom A
+        $excel->getActiveSheet()->getColumnDimension('B')->setWidth(110); // Set width kolom B
+        $excel->getActiveSheet()->getColumnDimension('C')->setWidth(15); // Set width kolom C
+        $excel->getActiveSheet()->getColumnDimension('D')->setWidth(20); // Set width kolom D
+        $excel->getActiveSheet()->getColumnDimension('E')->setWidth(20); // Set width kolom E
+        $excel->getActiveSheet()->getColumnDimension('F')->setWidth(25); // Set width kolom F
+
+        // Set currency format
+        $excel->getActiveSheet()->getStyle('C2:C'.$numrow)->getNumberFormat()->setFormatCode( '###0,00_-'); 
+        $excel->getActiveSheet()->getStyle('F2:F'.$numrow)->getNumberFormat()->setFormatCode( '###0,00_-'); 
+
+        // Set percentage format
+        $excel->getActiveSheet()->getStyle('D2:D'.$numrow)->getNumberFormat()->applyFromArray( 
+            array( 
+                'code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE
+            )
+        ); 
+        $excel->getActiveSheet()->getStyle('E2:E'.$numrow)->getNumberFormat()->applyFromArray( 
+            array( 
+                'code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE
+            )
+        ); 
+       
+        // Set height semua kolom menjadi auto (mengikuti height isi dari kolommnya, jadi otomatis)
+        $excel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(-1);
+        // Set orientasi kertas jadi LANDSCAPE
+        $excel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+        // Set judul file excel nya
+        $excel->getActiveSheet(0)->setTitle("rkakal unit");
+        $excel->setActiveSheetIndex(0);
+        // Proses file excel
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="List Monitoring Unit.xlsx"'); // Set nama file excel nya
+        header('Cache-Control: max-age=0');
+        $write = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $write->save('php://output');
+      }
 }
 
 /* End of file Kegiatan.php */

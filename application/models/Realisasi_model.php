@@ -40,6 +40,16 @@ class Realisasi_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
+    // get all data realisasi
+    function chart_all($kode)
+    {
+        $this->db->select('realisasi.realisasi_capaian as realisasi_capaian, realisasi.rencana_capaian as rencana_capaian');
+        $this->db->join('sub_komponen', 'sub_komponen.id_subkomponen=realisasi.id_subkomponen','left');
+        $this->db->join('komponen', 'komponen.id_komponen=sub_komponen.id_komponen','left');    
+        $this->db->where('komponen.kode_komponen', $kode);
+        return $this->db->get($this->table)->result();
+    }
+
     // sum data by id subkomponen
     function sum_by_idsubkomponen($id)
     {

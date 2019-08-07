@@ -68,18 +68,18 @@
             <div class="box-header with-border">
               <h3 class="box-title"><?php echo $title ?></h3>
               <br><br>
-              <div class="panel panel-default" style="display:inline-block;">
+              <!-- <div class="panel panel-default" style="display:inline-block;">
                 <div class="panel-heading post-thumb">
                   Filter :
                 </div>
                   <div class="panel-body post-body">
                       <label for="primary" class="btn btn-primary">Bulan <input type="checkbox" id="primary" class="badgebox"><span class="badge" onclick="myFunction()">&check;</span></label>
-                      <!-- <label for="info" class="btn btn-info">Info <input type="checkbox" id="info" class="badgebox"><span class="badge">&check;</span></label>
+                      <label for="info" class="btn btn-info">Info <input type="checkbox" id="info" class="badgebox"><span class="badge">&check;</span></label>
                       <label for="success" class="btn btn-success">Success <input type="checkbox" id="success" class="badgebox"><span class="badge">&check;</span></label>
                       <label for="warning" class="btn btn-warning">Warning <input type="checkbox" id="warning" class="badgebox"><span class="badge">&check;</span></label>
-                      <label for="danger" class="btn btn-danger">Danger <input type="checkbox" id="danger" class="badgebox"><span class="badge">&check;</span></label> -->
+                      <label for="danger" class="btn btn-danger">Danger <input type="checkbox" id="danger" class="badgebox"><span class="badge">&check;</span></label>
                   </div>
-              </div>
+              </div> -->
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                         title="Collapse">

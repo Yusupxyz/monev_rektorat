@@ -100,6 +100,17 @@ class Realisasi_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    // get data by id
+    function chart($id_unit,$kode)
+    {
+        $this->db->select('realisasi_rektorat.realisasi_capaian as realisasi_capaian, realisasi_rektorat.rencana_capaian as rencana_capaian');
+        $this->db->join('sub_komponen_rektorat', 'sub_komponen_rektorat.id_subkomponen=realisasi_rektorat.id_subkomponen','left');
+        $this->db->join('komponen_rektorat', 'komponen_rektorat.id_komponen=sub_komponen_rektorat.id_komponen','left');    
+        $this->db->where('id_unit', $id_unit);
+        $this->db->where('komponen_rektorat.kode_komponen', $kode);
+        $this->db->group_by('id_bulan');
+        return $this->db->get($this->table)->result();
+    }
 }
 
 /* End of file Realisasi_rektorat_model.php */

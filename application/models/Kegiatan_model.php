@@ -47,17 +47,6 @@ class Kegiatan_model extends CI_Model
          return $this->db->get($this->table)->row();
      }
 
-     // realisasi capaian chart
-    function chart()
-    {
-        $this->db->select('sum(kegiatan.capaian) as dataset, deskripsi as label');
-        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode','left');
-        $this->db->join('unit','unit.id_unit=kegiatan.id_unit','left');
-        $this->db->where('jenis', '1');
-        $this->db->where('unit.nama!=', 'A');
-        $this->db->group_by('kegiatan.id_unit');
-        return $this->db->get($this->table)->result();
-    }
 
     // sum data by id kegiatan
     function sum_by_induk($id)

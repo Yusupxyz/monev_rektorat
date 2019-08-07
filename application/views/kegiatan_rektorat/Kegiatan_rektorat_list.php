@@ -20,12 +20,14 @@
                 <?php echo anchor(site_url('kegiatan_rektorat/create/sub_program'),'<i class="fa fa-plus"></i> Tambah Sub Program', 'class="btn bg-maroon"'); ?>
                 <?php echo anchor(site_url('kegiatan_rektorat/create/sub_output'),'<i class="fa fa-plus"></i> Tambah Sub Output', 'class="btn bg-yellow"'); ?>
             </div>
+
             <div class="col-md-4 text-center">
                 <div style="margin-top: 8px" id="message">
                     
                 </div>
             </div>
-            <div class="col-md-1 text-right">
+            <div class="col-md-12 text-right">
+                <?php echo anchor(site_url('kegiatan_rektorat/export'),'<i class="fa fa-file-excel-o"></i> Ekspor ke Excel', 'class="btn bg-green"'); ?>
             </div>
             <div class="col-md-12 text-right"><form action="<?php echo site_url('kegiatan_rektorat/index'); ?>" class="form-inline" method="get" style="margin-top:10px">
                     <div class="input-group">
@@ -162,7 +164,8 @@
                         </tr> 
                         
                    <?php
-                        }}                        }
+                        }}                        
+                    }
                         //subkomponen unit
                         if($count_child_komponen_unit[$j]->jumlah_anak !='0'){
                             if (isset($subkomponenunit[$j][0])){ 

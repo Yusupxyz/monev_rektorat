@@ -29,7 +29,8 @@
                     
                 </div>
             </div>
-            <div class="col-md-1 text-right">
+            <div class="col-md-12 text-right">
+                <?php echo anchor(site_url('kegiatan/export/'.$key->id_unit),'<i class="fa fa-file-excel-o"></i> Ekspor ke Excel', 'class="btn bg-green"'); ?>
             </div>
             <div class="col-md-12 text-right"><form action="<?php echo site_url('kegiatan/index'); ?>" class="form-inline" method="get" style="margin-top:10px">
                     <div class="input-group">

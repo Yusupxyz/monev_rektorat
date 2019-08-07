@@ -37,6 +37,13 @@ class Kegiatan_rektorat_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
+
+    // get data by kode mdat
+    function get_by_kode($kode)
+    {
+        $this->db->where('kode_m_dat', $kode);
+        return $this->db->get($this->table)->row();
+    }
     
     // get total rows
     function total_rows($q = NULL,$i,$tahun) {
@@ -130,6 +137,7 @@ class Kegiatan_rektorat_model extends CI_Model
         $this->db->where('induk', $id);
         return $this->db->get($this->table)->row();
     }
+
 
 }
 

@@ -158,6 +158,7 @@ class Sub_komponen_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+
 }
 
 /* End of file Sub_komponen_rektorat_model.php */

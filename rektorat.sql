@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jul 31, 2019 at 07:01 PM
+-- Generation Time: Aug 07, 2019 at 09:04 AM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.3.0
 
@@ -150,10 +150,10 @@ INSERT INTO `kegiatan` (`id_kegiatan`, `kode_m_dat`, `volume`, `satuan`, `jumlah
 (36, '5742.001', '14300', 'Mahasiswa', 642375000, 0, 0, 0, 15, 1),
 (37, '5742.001.002', '-', '-', 642375000, 0, 0, 0, 15, 1),
 (38, '5742.002', '1', 'Layanan', 268000000, 0, 0, 0, 15, 1),
-(55, '042.01.01', '-', '-', 483865000, 10, 3, 100000, 16, 1),
-(56, '5742', '-', '-', 483865000, 10, 3, 100000, 16, 1),
-(57, '5742.001', '-', '-', 399865000, 10, 3, 100000, 16, 1),
-(59, '5742.001.002', '-', '-', 399865000, 10, 3, 100000, 16, 1),
+(55, '042.01.01', '-', '-', 483865000, 20, 3, 100000, 16, 1),
+(56, '5742', '-', '-', 483865000, 20, 3, 100000, 16, 1),
+(57, '5742.001', '-', '-', 399865000, 20, 3, 100000, 16, 1),
+(59, '5742.001.002', '-', '-', 399865000, 20, 3, 100000, 16, 1),
 (60, '5742.002', '-', '-', 84000000, 0, 0, 0, 16, 1),
 (63, '042.01.01', '-', '-', 0, 0, 0, 0, 17, 1),
 (64, '5742', '-', '-', 0, 0, 0, 0, 17, 1),
@@ -190,10 +190,10 @@ CREATE TABLE `kegiatan_rektorat` (
 --
 
 INSERT INTO `kegiatan_rektorat` (`id_kegiatan`, `kode_m_dat`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`, `id_unit`, `id_tahun`) VALUES
-(1, '042.01.01', '-', '-', 0, 0, 0, 0, 0, 1),
-(3, '2642', '-', '-', 0, 0, 0, 0, 0, 1),
-(5, '2642.001', '-', '-', 0, 0, 0, 0, 0, 1),
-(6, '2642.001.001', '-', '-', 0, 0, 0, 0, 0, 1);
+(1, '042.01.01', '-', '-', 0, 16, 10, 100000, 0, 1),
+(3, '2642', '-', '-', 0, 16, 10, 100000, 0, 1),
+(5, '2642.001', '-', '-', 0, 16, 10, 100000, 0, 1),
+(6, '2642.001.001', '-', '-', 0, 26, 10, 100000, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +222,7 @@ INSERT INTO `komponen` (`id_komponen`, `id_kegiatan`, `kode_komponen`, `uraian_k
 (1, 37, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 60000000, 0, 0, 0),
 (2, 37, '052', 'Proses Belajar Mengajar', '-', '-', 582375000, 0, 0, 0),
 (3, 38, '051', 'Penyelenggaraan Operasional Perkantoran\r\n', '-', '-', 268000000, 0, 0, 0),
-(5, 59, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 20000000, 5, 3, 100000),
+(5, 59, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 20000000, 15, 3, 100000),
 (6, 59, '052', 'Proses Belajar Mengajar\r\n', '-', '-', 326925000, 0, 0, 0),
 (7, 37, '057', 'Administrasi Pendidikan\r\n', '-', '-', 0, 0, 0, 0),
 (8, 37, '053', 'Wisuda dan Yudisium\r\n', '-', '-', 0, 0, 0, 0),
@@ -255,7 +255,8 @@ CREATE TABLE `komponen_rektorat` (
 --
 
 INSERT INTO `komponen_rektorat` (`id_komponen`, `id_kegiatan`, `kode_komponen`, `uraian_kegiatan`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`) VALUES
-(1, 6, '051', 'asas', '-', '-', 0, 0, 0, 0);
+(1, 6, '051', 'asas', '-', '-', 0, 22, 10, 100000),
+(2, 6, '052', 'as', 's', 's', 0, 4, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -269,6 +270,13 @@ CREATE TABLE `login_attempts` (
   `login` varchar(100) NOT NULL,
   `time` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `login_attempts`
+--
+
+INSERT INTO `login_attempts` (`id`, `ip_address`, `login`, `time`) VALUES
+(4, '::1', 'admin@admin', 1565159976);
 
 -- --------------------------------------------------------
 
@@ -400,7 +408,7 @@ CREATE TABLE `realisasi` (
 
 INSERT INTO `realisasi` (`id_realisasi`, `id_bulan`, `id_subkomponen`, `id_unit`, `rencana_capaian`, `ukuran_keberhasilan`, `realisasi_capaian`, `realisasi_jumlah`, `uraian_hasil`, `kendala`, `keterangan`) VALUES
 (1, 1, 12, 16, 5, '-', 1, 100000, '-', '-', '-'),
-(2, 2, 12, 16, 0, '-', 2, 0, '-', '-', '-'),
+(2, 2, 12, 16, 10, '-', 2, 0, '-', '-', '-'),
 (3, 3, 12, 16, 0, '-', 0, 0, '-', '-', '-'),
 (4, 4, 12, 16, 0, '-', 0, 0, '-', '-', '-'),
 (5, 5, 12, 16, 0, '-', 0, 0, '-', '-', '-'),
@@ -451,6 +459,80 @@ INSERT INTO `realisasi` (`id_realisasi`, `id_bulan`, `id_subkomponen`, `id_unit`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `realisasi_rektorat`
+--
+
+CREATE TABLE `realisasi_rektorat` (
+  `id_realisasi` int(5) NOT NULL,
+  `id_bulan` int(5) NOT NULL,
+  `id_subkomponen` int(5) NOT NULL,
+  `id_unit` int(5) NOT NULL,
+  `rencana_capaian` int(5) NOT NULL,
+  `ukuran_keberhasilan` text NOT NULL,
+  `realisasi_capaian` int(5) NOT NULL,
+  `realisasi_jumlah` int(50) NOT NULL,
+  `uraian_hasil` text NOT NULL,
+  `kendala` varchar(500) NOT NULL,
+  `keterangan` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `realisasi_rektorat`
+--
+
+INSERT INTO `realisasi_rektorat` (`id_realisasi`, `id_bulan`, `id_subkomponen`, `id_unit`, `rencana_capaian`, `ukuran_keberhasilan`, `realisasi_capaian`, `realisasi_jumlah`, `uraian_hasil`, `kendala`, `keterangan`) VALUES
+(1, 1, 1, 0, 5, '-', 5, 0, '-', '-', '-'),
+(2, 2, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(3, 3, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(4, 4, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(5, 5, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(6, 6, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(7, 7, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(8, 8, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(9, 9, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(10, 10, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(11, 11, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(12, 12, 1, 0, 0, '-', 0, 0, '-', '-', '-'),
+(13, 1, 2, 0, 2, '-', 2, 0, '-', '-', '-'),
+(14, 2, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(15, 3, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(16, 4, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(17, 5, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(18, 6, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(19, 7, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(20, 8, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(21, 9, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(22, 10, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(23, 11, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(24, 12, 2, 0, 0, '-', 0, 0, '-', '-', '-'),
+(25, 1, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(26, 2, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(27, 3, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(28, 4, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(29, 5, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(30, 6, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(31, 7, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(32, 8, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(33, 9, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(34, 10, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(35, 11, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(36, 12, 4, 0, 0, '-', 0, 0, '-', '-', '-'),
+(37, 1, 3, 0, 4, '-', 0, 0, '-', '-', '-'),
+(38, 2, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(39, 3, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(40, 4, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(41, 5, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(42, 6, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(43, 7, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(44, 8, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(45, 9, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(46, 10, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(47, 11, 3, 0, 0, '-', 0, 0, '-', '-', '-'),
+(48, 12, 3, 0, 0, '-', 0, 0, '-', '-', '-');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `setting_waktu`
 --
 
@@ -467,7 +549,7 @@ CREATE TABLE `setting_waktu` (
 
 INSERT INTO `setting_waktu` (`id_setting_waktu`, `nama`, `waktu_awal`, `waktu_akhir`) VALUES
 (5, 'Waktu Pengisian Rencana Capaian', '2019-07-20', '2019-09-05'),
-(7, 'Waktu Pengisian Realisasi Capaian Fisik', '2019-07-20', '2019-08-01');
+(7, 'Waktu Pengisian Realisasi Capaian Fisik', '2019-08-22', '2019-09-14');
 
 -- --------------------------------------------------------
 
@@ -493,11 +575,10 @@ CREATE TABLE `sub_komponen` (
 --
 
 INSERT INTO `sub_komponen` (`id_subkomponen`, `id_komponen`, `kode_subkomponen`, `uraian_kegiatan`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`) VALUES
-(12, 5, 'DA', 'Pengenalan Kehidupan Kampus Bagi Mahasiswa Baru (PKKMB)\r\n', '-', '-', 20000000, 5, 3, 100000),
+(12, 5, 'DA', 'Pengenalan Kehidupan Kampus Bagi Mahasiswa Baru (PKKMB)\r\n', '-', '-', 20000000, 15, 3, 100000),
 (13, 6, 'DA', 'Ujian Tengah dan Ujian Akhir Semester Fakultas Ekonomi dan Bisnis\r\n', '-', '-', 326925000, 0, 0, 0),
 (14, 9, 'DA', 'Yudisium dan Pelepasan Alumni Mahasiswa Fakultas Ekonomi dan Bisnis\r\n', '-', '-', 52940000, 5, 0, 0),
-(15, 10, 'DA', 'Publikasi Ilmiah Bagi Dosen 3 Jurusan di FEB\r\n', '-', '-', 84000000, 0, 0, 0),
-(16, 12, 'A', 'PERAWATAN SARANA GEDUNG\r\n', '-', '-', 1184900000, 0, 0, 0);
+(15, 10, 'DA', 'Publikasi Ilmiah Bagi Dosen 3 Jurusan di FEB\r\n', '-', '-', 84000000, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -517,6 +598,16 @@ CREATE TABLE `sub_komponen_rektorat` (
   `capaian` int(5) NOT NULL,
   `jumlah_capaian` bigint(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sub_komponen_rektorat`
+--
+
+INSERT INTO `sub_komponen_rektorat` (`id_subkomponen`, `id_komponen`, `kode_subkomponen`, `uraian_kegiatan`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`) VALUES
+(1, 1, 'EA', 'sd', 'd', 'd', 522550000, 5, 5, 0),
+(2, 1, 'EB', 'dd', '-', '-', 522550000, 2, 2, 0),
+(3, 2, 'EB', 'ss', 's', '-', 522550000, 4, 0, 0),
+(4, 1, 'EA', 's', 's', '-', 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -558,6 +649,7 @@ CREATE TABLE `unit` (
 --
 
 INSERT INTO `unit` (`id_unit`, `nama`, `deskripsi`) VALUES
+(0, 'A', 'Rektorat'),
 (15, 'E', 'Fakultas Pertanian'),
 (16, 'D', 'Fakultas Ekonomi'),
 (17, 'H', 'Fakultas Hukum'),
@@ -574,8 +666,7 @@ INSERT INTO `unit` (`id_unit`, `nama`, `deskripsi`) VALUES
 (28, 'N', 'LP3MP'),
 (29, 'M', 'LPPM'),
 (30, 'Y', 'UPT Perpustakaan'),
-(31, 'R', 'UPT TIK'),
-(32, 'A', 'Rektorat');
+(31, 'R', 'UPT TIK');
 
 -- --------------------------------------------------------
 
@@ -609,12 +700,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `id_unit`) VALUES
-(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', 'm0vyKu2zW7L8PTG20bquF.707e055aeea8a30aca', 1541329145, 'XfERkEq7bkuTwbgQGlGLFe', 1268889823, 1564571902, 1, 'Admin', 'istratorr', 'ADMIN', '0', 0),
+(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', 'm0vyKu2zW7L8PTG20bquF.707e055aeea8a30aca', 1541329145, 'XfERkEq7bkuTwbgQGlGLFe', 1268889823, 1565159985, 1, 'Admin', 'istratorr', 'ADMIN', '0', 0),
 (2, '127.0.0.1', 'member', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'member@member.com', '', 'm0vyKu2zW7L8PTG20bquF.707e055aeea8a30aca', 1541329145, 'lHtbqmxsnla1izZ5LcXd9O', 1268889823, 1563305013, 1, 'Operator', 'Fisip', 'Prodi', '0', 18),
-(5, '::1', 'admin12@admin.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'admin12@admin.com', NULL, NULL, NULL, 'oFOO1kuHokNrnFHMZTHP4u', 1562004896, 1563658908, 1, 'admin', 'rektorat', 'Prodi', '12424', 32),
-(6, '::1', 'yusufxyz114@gmail.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'yusufxyz114@gmail.com', NULL, NULL, NULL, 'dggqPO3Ak20f7bqgSeUeYe', 1562813018, 1564201225, 1, 'Operator', 'Ekonomi', 'Prodi Ekonomi', '12424', 16),
+(5, '::1', 'admin12@admin.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'admin12@admin.com', NULL, NULL, NULL, 'oFOO1kuHokNrnFHMZTHP4u', 1562004896, 1565158480, 1, 'admin', 'rektorat', 'Prodi', '12424', 0),
+(6, '::1', 'yusufxyz114@gmail.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'yusufxyz114@gmail.com', NULL, NULL, NULL, 'dggqPO3Ak20f7bqgSeUeYe', 1562813018, 1565159586, 1, 'Operator', 'Ekonomi', 'Prodi Ekonomi', '12424', 16),
 (7, '::1', 'fh@fh.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'fh@fh.com', NULL, NULL, NULL, NULL, 1562813184, NULL, 1, 'Operator', 'Hukum', 'Fakultas Hukum', '12345', 17),
-(8, '::1', 'wn@mail.com', '$2y$08$LyBlida.clkVxc1OXyqn9ujaslxF7EUml/Qu.4oKhHNvJy8keC.1K', NULL, 'wn@mail.com', NULL, NULL, NULL, NULL, 1563138912, 1563658892, 1, 'Waluya', 'N', 'Prodi', '1', 16);
+(8, '::1', 'wn@mail.com', '$2y$08$LyBlida.clkVxc1OXyqn9ujaslxF7EUml/Qu.4oKhHNvJy8keC.1K', NULL, 'wn@mail.com', NULL, NULL, NULL, NULL, 1563138912, 1565158464, 1, 'Waluya', 'N', 'Prodi', '1', 16);
 
 -- --------------------------------------------------------
 
@@ -715,6 +806,12 @@ ALTER TABLE `realisasi`
   ADD KEY `id_subkomponen` (`id_subkomponen`);
 
 --
+-- Indexes for table `realisasi_rektorat`
+--
+ALTER TABLE `realisasi_rektorat`
+  ADD PRIMARY KEY (`id_realisasi`);
+
+--
 -- Indexes for table `setting_waktu`
 --
 ALTER TABLE `setting_waktu`
@@ -799,13 +896,13 @@ ALTER TABLE `komponen`
 -- AUTO_INCREMENT for table `komponen_rektorat`
 --
 ALTER TABLE `komponen_rektorat`
-  MODIFY `id_komponen` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_komponen` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `menu`
@@ -823,6 +920,12 @@ ALTER TABLE `menu_type`
 -- AUTO_INCREMENT for table `realisasi`
 --
 ALTER TABLE `realisasi`
+  MODIFY `id_realisasi` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
+-- AUTO_INCREMENT for table `realisasi_rektorat`
+--
+ALTER TABLE `realisasi_rektorat`
   MODIFY `id_realisasi` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
@@ -835,13 +938,13 @@ ALTER TABLE `setting_waktu`
 -- AUTO_INCREMENT for table `sub_komponen`
 --
 ALTER TABLE `sub_komponen`
-  MODIFY `id_subkomponen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_subkomponen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `sub_komponen_rektorat`
 --
 ALTER TABLE `sub_komponen_rektorat`
-  MODIFY `id_subkomponen` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_subkomponen` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tahun`
@@ -853,7 +956,7 @@ ALTER TABLE `tahun`
 -- AUTO_INCREMENT for table `unit`
 --
 ALTER TABLE `unit`
-  MODIFY `id_unit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id_unit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `users`
