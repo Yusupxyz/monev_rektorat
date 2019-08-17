@@ -79,8 +79,8 @@ class Dashboard extends CI_Controller {
 				}
 				$i++;
 			}
-			$data['color']=array("#ffff99","#ffff99", "#9999ff", "#9999ff", "#abedcc", "#abedcc", "#c9cfcc", "#c9cfcc","#ff1a75","#ff1a75"
-								,"#4d4dff","#4d4dff","#00b300","#00b300","#c6ff1a","#c6ff1a","#99994d","#99994d","#cc00cc","#cc00cc"
+			$data['color']=array("#ffff99","#9999ff", "#abedcc", "#c9cfcc", "#ff1a75", "#4d4dff", "#00b300", "#c6ff1a","#99994d","#cc00cc"
+								,"#00e673","#00e6e6","#00b300","#00b300","#c6ff1a","#c6ff1a","#99994d","#99994d","#cc00cc","#cc00cc"
 								,"#00e673","#00e673","#00e6e6","#00e6e6","#e6e600","#e6e600");
 			$data['dataset']=$dataset;
 			// print("<pre>".print_r($data['dataset'],true)."</pre>");
