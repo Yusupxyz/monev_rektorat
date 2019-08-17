@@ -83,17 +83,18 @@ class Unit extends CI_Controller
             $this->create();
         } else {
             $data = array(
-		'id_unit' => $this->input->post('id_unit',TRUE),
-		'nama' => $this->input->post('nama',TRUE),
-		'deskripsi' => $this->input->post('deskripsi',TRUE),
-	    );
-if(! $this->Unit_model->is_exist($this->input->post('id_unit'))){
-                $this->Unit_model->insert($data);
+                // 'id_unit' => $this->input->post('id_unit',TRUE),
+                'nama' => $this->input->post('nama',TRUE),
+                'deskripsi' => $this->input->post('deskripsi',TRUE),
+	        );
+        if(! $this->Unit_model->is_exist_nama($this->input->post('nama'))){
+            echo 'ddd';
+            $this->Unit_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
             redirect(site_url('unit'));
             }else{
                 $this->create();
-                $this->session->set_flashdata('message', 'Create Record Faild, id_unit is exist');
+                $this->session->set_flashdata('message', 'Create Record Failed, id_unit is exist');
             }}
     }
     
@@ -168,11 +169,11 @@ if(! $this->Unit_model->is_exist($this->input->post('id_unit'))){
    
     public function _rules() 
     {
-	$this->form_validation->set_rules('id_unit', 'id unit', 'trim|required');
+	// $this->form_validation->set_rules('id_unit', 'id unit', 'trim|required');
 	$this->form_validation->set_rules('nama', 'nama', 'trim|required');
 	$this->form_validation->set_rules('deskripsi', 'deskripsi', 'trim|required');
 
-	$this->form_validation->set_rules('id_unit', 'id_unit', 'trim');
+	// $this->form_validation->set_rules('id_unit', 'id_unit', 'trim');
 	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 

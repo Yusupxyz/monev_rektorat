@@ -33,19 +33,19 @@ class Komponen_model extends CI_Model
     function get_id_komponen($id)
     {
         $this->db->select('komponen.id_komponen, kode_komponen, komponen.uraian_kegiatan');
-        $this->db->join('kegiatan','kegiatan.id_kegiatan=komponen.id_kegiatan','left');
-        $this->db->where('kegiatan.id_unit',$id);
+        $this->db->join('kegiatan', 'kegiatan.id_kegiatan=komponen.id_kegiatan', 'left');
+        $this->db->where('kegiatan.id_unit', $id);
         $this->db->group_by('id_komponen');
         return $this->db->get($this->table)->result();
     }
 
-       // get id komponen by id subkomponen
-       function get_idsuboutput($id)
-       {
-           $this->db->select('id_kegiatan');
-           $this->db->where('id_komponen', $id);
-           return $this->db->get($this->table)->row();
-       }
+    // get id komponen by id subkomponen
+    function get_idsuboutput($id)
+    {
+        $this->db->select('id_kegiatan');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
 
     // sum sub output data by id
     function sum_sub_output($id)
@@ -55,7 +55,6 @@ class Komponen_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
-    
     // sum data by id kegiatan
     function sum_by_idsuboutput($id)
     {
@@ -69,45 +68,48 @@ class Komponen_model extends CI_Model
     function get_id_kegiatan($id)
     {
         $this->db->select('komponen.id_kegiatan');
-        $this->db->join('kegiatan','kegiatan.id_kegiatan=komponen.id_kegiatan','left');
-        $this->db->where('kegiatan.id_unit',$id);
+        $this->db->join('kegiatan', 'kegiatan.id_kegiatan=komponen.id_kegiatan', 'left');
+        $this->db->where('kegiatan.id_unit', $id);
         $this->db->group_by('id_kegiatan');
         return $this->db->get($this->table)->result();
     }
 
     // get data by id_kegiatan
-    function get_by_id_kegiatan($i,$b,$tahun)
+    function get_by_id_kegiatan($i, $b, $tahun)
     {
-        $result=$this->db->query (
+        $result = $this->db->query(
             'SELECT * FROM komponen WHERE id_kegiatan = 
-                     (select id_kegiatan from kegiatan where id_unit='.$b.' AND id_tahun='.$tahun.' limit '.$i.',1)')->result();
+                     (select id_kegiatan from kegiatan where id_unit=' . $b . ' AND id_tahun=' . $tahun . ' limit ' . $i . ',1)'
+        )->result();
         return $result;
     }
-    
+
     // get total rows
-    function total_rows($q = NULL) {
+    function total_rows($q = NULL)
+    {
         $this->db->like('kode_komponen', $q);
-	$this->db->or_like('kode_komponen', $q);
-	$this->db->or_like('id_kegiatan', $q);
-	$this->db->or_like('uraian_kegiatan', $q);
-	$this->db->or_like('volume', $q);
-	$this->db->or_like('satuan', $q);
-	$this->db->or_like('jumlah', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('kode_komponen', $q);
+        $this->db->or_like('id_kegiatan', $q);
+        $this->db->or_like('uraian_kegiatan', $q);
+        $this->db->or_like('volume', $q);
+        $this->db->or_like('satuan', $q);
+        $this->db->or_like('jumlah', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
     // get data with limit and search
-    function get_limit_data($limit, $start = 0, $q = NULL) {
+    function get_limit_data($limit, $start = 0, $q = NULL)
+    {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('kode_komponen', $q);
-	$this->db->or_like('kode_komponen', $q);
-	$this->db->or_like('id_kegiatan', $q);
-	$this->db->or_like('uraian_kegiatan', $q);
-	$this->db->or_like('volume', $q);
-	$this->db->or_like('satuan', $q);
-	$this->db->or_like('jumlah', $q);
-	$this->db->limit($limit, $start);
+        $this->db->or_like('kode_komponen', $q);
+        $this->db->or_like('id_kegiatan', $q);
+        $this->db->or_like('uraian_kegiatan', $q);
+        $this->db->or_like('volume', $q);
+        $this->db->or_like('satuan', $q);
+        $this->db->or_like('jumlah', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
@@ -134,54 +136,57 @@ class Komponen_model extends CI_Model
     }
 
     // delete bulkdata
-    function deletebulk(){
+    function deletebulk()
+    {
         $data = $this->input->post('msg_', TRUE);
-        $arr_id = explode(",", $data); 
+        $arr_id = explode(",", $data);
         $this->db->where_in($this->id, $arr_id);
         return $this->db->delete($this->table);
     }
-//check pk data is exists 
+    //check pk data is exists 
 
-        function is_exist($id){
-         $query = $this->db->get_where($this->table, array($this->id => $id));
-         $count = $query->num_rows();
-         if($count > 0){
+    function is_exist($id)
+    {
+        $query = $this->db->get_where($this->table, array($this->id => $id));
+        $count = $query->num_rows();
+        if ($count > 0) {
             return true;
-         }else{
+        } else {
             return false;
-         }
         }
-        
-// get jumlah anak by id
-function count_child($i,$b)
-{
-    $result=$this->db->query (
-        'SELECT count(*) as "jumlah_anak" FROM komponen 
-         LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
-         WHERE sub_komponen.id_komponen=(SELECT id_komponen from sub_komponen limit '.$i.',1)')->row();
-    return $result;
-}
+    }
 
-// get jumlah anak dari unit by id
-function count_all_child($kode)
-{
-    $result=$this->db->query (
-        'SELECT count(*) as "jumlah_anak" FROM sub_komponen 
-        LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
-        WHERE komponen.kode_komponen="'.$kode.'"')->row();
+    // get jumlah anak by id
+    function count_child($i, $b)
+    {
+        $result = $this->db->query(
+            'SELECT count(*) as "jumlah_anak" FROM komponen 
+         LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
+         WHERE sub_komponen.id_komponen=(SELECT id_komponen from sub_komponen limit ' . $i . ',1)'
+        )->row();
         return $result;
-}
+    }
+
+    // get jumlah anak dari unit by id
+    function count_all_child($kode)
+    {
+        $result = $this->db->query(
+            'SELECT count(*) as "jumlah_anak" FROM sub_komponen 
+        LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
+        WHERE komponen.kode_komponen="' . $kode . '"'
+        )->row();
+        return $result;
+    }
 
     // count komponen
     function count_komponen($b)
     {
-        $result=$this->db->query ('
+        $result = $this->db->query('
             SELECT count(*) as "count" from komponen 
             LEFT join kegiatan on kegiatan.id_kegiatan = komponen.id_kegiatan 
-            WHERE kegiatan.id_unit = '.$b.' ')->row();
+            WHERE kegiatan.id_unit = ' . $b . ' ')->row();
         return $result;
     }
-
 }
 
 /* End of file Komponen_model.php */

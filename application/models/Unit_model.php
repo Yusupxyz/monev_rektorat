@@ -54,10 +54,10 @@ class Unit_model extends CI_Model
     // get total rows
     function total_rows($q = NULL) {
         $this->db->like('id_unit', $q);
-	$this->db->or_like('id_unit', $q);
-	$this->db->or_like('nama', $q);
-	$this->db->or_like('deskripsi', $q);
-	$this->db->from($this->table);
+        $this->db->or_like('id_unit', $q);
+        $this->db->or_like('nama', $q);
+        $this->db->or_like('deskripsi', $q);
+        $this->db->from($this->table);
         return $this->db->count_all_results();
     }
 
@@ -65,10 +65,10 @@ class Unit_model extends CI_Model
     function get_limit_data($limit, $start = 0, $q = NULL) {
         $this->db->order_by($this->id, $this->order);
         $this->db->like('id_unit', $q);
-	$this->db->or_like('id_unit', $q);
-	$this->db->or_like('nama', $q);
-	$this->db->or_like('deskripsi', $q);
-	$this->db->limit($limit, $start);
+        $this->db->or_like('id_unit', $q);
+        $this->db->or_like('nama', $q);
+        $this->db->or_like('deskripsi', $q);
+        $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }
 
@@ -110,6 +110,16 @@ class Unit_model extends CI_Model
             return false;
          }
         }
+
+        function is_exist_nama($nama){
+            $query = $this->db->get_where($this->table, array('nama' => $nama));
+            $count = $query->num_rows();
+            if($count > 0){
+               return true;
+            }else{
+               return false;
+            }
+           }
 
 
 }

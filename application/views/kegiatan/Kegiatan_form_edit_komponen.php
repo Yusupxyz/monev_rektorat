@@ -13,12 +13,15 @@
             <!-- /.box-header -->
             <div class="box-body">
                 <form action="<?php echo $action; ?>" method="post">
+                    <input type="hidden" name="id_komponen" value="<?php echo $id_komponen; ?>">
+                    <input type="hidden" name="id_unit" value="<?php echo $id_unit; ?>">
                     <div class="form-group">
-                        <input type="hidden" class="form-control" name="id_unit" id="id_unit" value="<?php echo $id_unit; ?>" />
-                        <label for="varchar">Kode Kegiatan11 <?php echo form_error('kode_m_dat') ?></label>
-                        <?php $attribute = 'class="form-control" required'; ?>
-                        <?php echo form_dropdown('kode_m_dat', $m_data, null, $attribute); ?>
-                        <input type="hidden" class="form-control" name="id_kegiatan" id="id_kegiatan" placeholder="Id Kegiatan" value="<?php echo $id_kegiatan; ?>" />
+                        <label for="varchar">Kode Komponen <?php echo form_error('kode_komponen') ?></label>
+                        <input type="text" class="form-control" name="kode_komponen" id="kode_komponen" placeholder="Kode Komponen" value="<?php echo $kode_komponen; ?>" />
+                    </div>
+                    <div class="form-group">
+                        <label for="varchar">Uraian Kegiatan <?php echo form_error('uraian_kegiatan') ?></label>
+                        <textarea class="form-control" name="uraian_kegiatan" id="uraian_kegiatan" placeholder="Uraian Kegiatan" value=""><?php echo $uraian_kegiatan; ?></textarea>
                     </div>
                     <div class="form-group">
                         <label for="varchar">Volume <?php echo form_error('volume') ?></label>

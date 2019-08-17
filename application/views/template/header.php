@@ -114,14 +114,22 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="<?= base_url('assets/dist/img/user2-160x160.jpg" class="user-image" alt="U'); ?>ser Image">
+                <?php if ($user->foto ==''){?>
+                <img src="<?= base_url('assets/dist/img/avatar5.png');?>" class='user-image' alt='User Image'>
+                <?php }else{?>
+                <img class="user-image" src="data:image/jpeg;base64,<?php echo $user->foto; ?>" alt="Avatar" >
+                <?php }?>
                 <span class="hidden-xs"><?= $user->first_name; ?>&nbsp;<?= $user->last_name; ?></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
-                  <img src="<?= base_url('assets/dist/img/user2-160x160.jpg" class="img-circle" alt="U'); ?>ser Image">
-
+                  <?php if ($user->foto ==''){?>
+                  <img src="<?= base_url('assets/dist/img/avatar5.png');?>" class='user-image' alt='User Image'>
+                  <?php }else{?>
+                  <img src="data:image/jpeg;base64,<?php echo $user->foto; ?>" class="img-circle" alt="User Image');">
+                  
+                  <?php } ?>
                   <p>
                     <?= $user->first_name; ?>&nbsp;<?= $user->first_name; ?>
                   </p>
@@ -153,7 +161,11 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
           <div class="pull-left image">
-            <img src="<?= base_url('assets/dist/img/user2-160x160.jpg" class="img-circle" alt="U'); ?>ser Image">
+            <?php if ($user->foto ==''){?>
+             <img src="<?= base_url('assets/dist/img/avatar5.png" class="user-image" alt="User Image');?>">
+             <?php }else{?>
+             <img src="data:image/jpeg;base64,<?php echo $user->foto; ?>" class="img-circle" alt="User Image'); ?>">
+             <?php }?>
           </div>
           <div class="pull-left info">
             <p><?= $user->first_name; ?>&nbsp;<?= $user->last_name; ?></p>

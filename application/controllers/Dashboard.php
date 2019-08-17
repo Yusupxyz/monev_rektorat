@@ -28,6 +28,7 @@ class Dashboard extends CI_Controller {
 		$this->group_id=$this->Users_model->get_group_id($this->user->id)->group_id;
 		if ($this->group_id=='3' || $this->group_id=='4'){
 			$data['total_pagu']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah;
+			$data['total_serapan_dana'] = $this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah_capaian;
 			$data['total_realisasi_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->capaian;
 			$data['total_rencana_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->rencana_capaian;
 			$data['label']=$this->Komponen_model->get_id_komponen($this->user->id_unit);
@@ -44,16 +45,22 @@ class Dashboard extends CI_Controller {
 					$dataset[$i][]=$value->realisasi_capaian;
 				}
 				$i++;
+				// print("<pre>".print_r($a,true)."</pre>");
+
 			}
 			$data['color']=array("#ffff99","#ffff99", "#9999ff", "#9999ff", "#abedcc", "#abedcc", "#c9cfcc", "#c9cfcc","#ff1a75","#ff1a75"
 								,"#4d4dff","#4d4dff","#00b300","#00b300","#c6ff1a","#c6ff1a","#99994d","#99994d","#cc00cc","#cc00cc"
 								,"#00e673","#00e673","#00e6e6","#00e6e6","#e6e600","#e6e600");
 			$data['dataset']=$dataset;
-			// print("<pre>".print_r($data['color'],true)."</pre>");
+			// print("<pre>".print_r($data['a'],true)."</pre>");
+			// echo count($data['dataset']);
+			// echo count($data['labels']);
+
 
 			$data['title'] = 'Realisasi Capaian Tahun '.$this->tahun;
 		}else{
 			$data['total_pagu']=$this->Kegiatan_rektorat_model->get_by_kode('042.01.01')->jumlah;
+			$data['total_serapan_dana'] = $this->Kegiatan_rektorat_model->get_by_kode('042.01.01')->jumlah_capaian;
 			$data['total_realisasi_capaian']=$this->Kegiatan_rektorat_model->get_by_kode('042.01.01')->capaian;
 			$data['total_rencana_capaian']=$this->Kegiatan_rektorat_model->get_by_kode('042.01.01')->rencana_capaian;
 			$data['label']=$this->Komponen_rektorat_model->get_id_komponen($this->user->id_unit);
@@ -79,8 +86,8 @@ class Dashboard extends CI_Controller {
 				}
 				$i++;
 			}
-			$data['color']=array("#ffff99","#9999ff", "#abedcc", "#c9cfcc", "#ff1a75", "#4d4dff", "#00b300", "#c6ff1a","#99994d","#cc00cc"
-								,"#00e673","#00e6e6","#00b300","#00b300","#c6ff1a","#c6ff1a","#99994d","#99994d","#cc00cc","#cc00cc"
+			$data['color']=array("#ffff99","#ffff99", "#9999ff", "#9999ff", "#abedcc", "#abedcc", "#c9cfcc", "#c9cfcc","#ff1a75","#ff1a75"
+								,"#4d4dff","#4d4dff","#00b300","#00b300","#c6ff1a","#c6ff1a","#99994d","#99994d","#cc00cc","#cc00cc"
 								,"#00e673","#00e673","#00e6e6","#00e6e6","#e6e600","#e6e600");
 			$data['dataset']=$dataset;
 			// print("<pre>".print_r($data['dataset'],true)."</pre>");

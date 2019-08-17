@@ -15,7 +15,7 @@
       <div class="box-body">
         <div class="row" style="margin-bottom: 10px">
             <div class="col-md-4">
-                <?php echo anchor(site_url('setting_waktu/create'),'<i class="fa fa-plus"></i> Tambah', 'class="btn bg-purple"'); ?>
+                <!-- <?php echo anchor(site_url('setting_waktu/create'),'<i class="fa fa-plus"></i> Tambah', 'class="btn bg-purple"'); ?> -->
             </div>
             <div class="col-md-4 text-center">
                 <div style="margin-top: 8px" id="message">
@@ -69,7 +69,7 @@
 				echo ' '; 
 				echo anchor(site_url('setting_waktu/update/'.$setting_waktu->id_setting_waktu),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
 				echo ' '; 
-				echo anchor(site_url('setting_waktu/delete/'.$setting_waktu->id_setting_waktu),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'setting_waktu/delete/'.$setting_waktu->id_setting_waktu.'\')"  data-toggle="tooltip" title="Delete" '); 
+				// echo anchor(site_url('setting_waktu/delete/'.$setting_waktu->id_setting_waktu),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'setting_waktu/delete/'.$setting_waktu->id_setting_waktu.'\')"  data-toggle="tooltip" title="Delete" '); 
 				?>
 			</td>
 		</tr>

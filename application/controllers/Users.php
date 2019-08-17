@@ -29,9 +29,9 @@ class Users extends CI_Controller
         foreach ($data['users'] as $k => $user) {
             $data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
         }
-        foreach ($data['users'] as $k => $user) {
-            $data['users'][$k]->unit = $this->ion_auth->get_users_unit($user->id_unit)->result();
-        }
+        // foreach ($data['users'] as $k => $user) {
+        //     $data['users'][$k]->unit = $this->ion_auth->get_users_unit($user->id_unit)->result();
+        // }
         $data['title'] = 'Users';
         $data['subtitle'] = '';
         $data['crumb'] = [

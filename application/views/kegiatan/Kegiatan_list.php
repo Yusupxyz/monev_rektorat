@@ -58,7 +58,7 @@
 		<!-- <th>Id Kegiatan</th> -->
 		<th>Kode</th>
 		<th>Uraian Kegiatan</th>
-		<th>Jumlah</th>
+		<th>Jumlah Pagu</th>
 		<th>Rencana Capaian</th>
 		<th>Realisasi Capaian Fisik</th>
 		<th>Realisasi Jumlah Capaian</th>
@@ -74,17 +74,18 @@
                 ?>
                 <tr>
                 
-		<td  style="width: 10px;padding-left: 8px;"><input type="checkbox" name="id" value="<?= $kegiatan->id_kegiatan;?>" />&nbsp;</td>
+		    <td  style="width: 10px;padding-left: 8px;"><input type="checkbox" name="id" value="<?= $kegiatan->id_kegiatan;?>" />&nbsp;</td>
                 
 			<td width="80px"><?php echo ++$start ?></td>
 			<!-- <td><?php echo $kegiatan->id_kegiatan ?></td> -->
 			<td><?php echo $kegiatan->kode_m_dat ?></td>
 			<td><?php echo $kegiatan->ket ?></td>
 			<td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-			<td><?php echo $kegiatan->rencana_capaian."%" ?></td>
-			<td><?php echo $kegiatan->capaian."%" ?></td>
+			<td style="text-align:center"><?php echo $kegiatan->rencana_capaian."%" ?></td>
+			<td style="text-align:center"><?php echo $kegiatan->capaian."%" ?></td>
 			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
-			<td style="text-align:center" width="200px">
+            <td style="text-align:center" width="200px">
+                <!-- create komponen -->
                 <?php if ($group_id==""){
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child[$i]->jumlah_anak=='0'){
@@ -92,12 +93,12 @@
                     echo ' '; 
                     }
                 }
-				echo anchor(site_url('kegiatan/update/'.$kegiatan->id_kegiatan),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
+				// echo anchor(site_url('kegiatan/update/'.$kegiatan->id_kegiatan),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
 				echo ' '; 
-				echo anchor(site_url('kegiatan/delete/'.$kegiatan->id_kegiatan),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
+				echo anchor(site_url('kegiatan/delete_kegiatan/'.$kegiatan->id_kegiatan.'/'.$kegiatan->id_unit),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'delete_kegiatan/'.$kegiatan->id_kegiatan.'/'.$kegiatan->id_unit.'\')"  data-toggle="tooltip" title="Delete" '); 
             }?>
 			</td>
-		</tr>
+		    </tr>
         <?php 
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child[$i]->jumlah_anak=='0'){
@@ -113,10 +114,11 @@
                             <td><?php echo $value->kode_komponen; ?></td>
                             <td><?php echo $value->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-                            <td><?php echo $value->rencana_capaian."%" ?></td>
-                            <td><?php echo $value->capaian."%" ?></td>
+                            <td style="text-align:center"><?php echo $value->rencana_capaian."%" ?></td>
+                            <td style="text-align:center"><?php echo $value->capaian."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
                             <td style="text-align:center" width="200px">
+                            <!-- create subkomponen -->
                             <?php if ($group_id==""){
                                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                                     if($count_child[$i]->jumlah_anak=='0'){
@@ -124,15 +126,15 @@
                                     echo ' '; 
                                     }
                                 }
-                                echo anchor(site_url('kegiatan/update/'.$value->id_komponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
+                                echo anchor(site_url('kegiatan/update_komponen/'.$kegiatan->id_unit.'/'.$value->id_komponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
                                 echo ' '; 
-                                echo anchor(site_url('kegiatan/delete/'.$value->id_komponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
+                                echo anchor(site_url('kegiatan/delete_komponen/'.$value->id_komponen.'/'.$kegiatan->id_unit),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'delete_komponen/'.$value->id_komponen.'/'.$kegiatan->id_unit.'\')"  data-toggle="tooltip" title="Delete" '); 
                              } ?>
                             </td>
                         </tr> 
                         
                    <?php
-
+                // sub komponen dan realiasai
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child_komponen[$j]->jumlah_anak !='0'){
                         if (isset($subkomponen[$j][0])){ 
@@ -146,14 +148,14 @@
                             <td><?php echo $value1->kode_subkomponen; ?></td>
                             <td><?php echo $value1->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-                            <td><?php echo $value1->rencana_capaian."%" ?></td>
-                            <td><?php echo $value1->capaian."%" ?></td>
+                            <td style="text-align:center"><?php echo $value1->rencana_capaian."%" ?></td>
+                            <td style="text-align:center"><?php echo $value1->capaian."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
                             <td style="text-align:center" width="200px">
                             <?php if ($group_id==""){
-                                echo anchor(site_url('kegiatan/update/'.$value1->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
+                                echo anchor(site_url('kegiatan/update_subkomponen/'.$value1->id_unit.'/'.$value1->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
                                 echo ' '; 
-                                echo anchor(site_url('kegiatan/delete/'.$value1->id_subkomponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
+                                echo anchor(site_url('kegiatan/delete_subkomponen/'.$value1->id_subkomponen.'/'.$value1->id_unit),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'delete_subkomponen/'.$value1->id_subkomponen.'/'.$value1->id_unit.'\')"data-toggle="tooltip" title="Delete" '); 
                              }else{
                                  if ($group_id=="2" || $group_id=="1"){
                                     echo anchor(site_url('realisasi/'.$value1->id_subkomponen.'/'.$value1->id_unit),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 

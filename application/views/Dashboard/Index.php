@@ -19,6 +19,25 @@
           </div>
           <!-- /.info-box -->
         </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Serapan Pagu</span>
+              <span class="info-box-number">Rp <?= nominal($total_serapan_dana); ?></span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+                  <span class="progress-description">
+                    Total Rupiah
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box bg-green">
