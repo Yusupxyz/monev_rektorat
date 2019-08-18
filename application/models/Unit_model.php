@@ -8,7 +8,7 @@ class Unit_model extends CI_Model
 
     public $table = 'unit';
     public $id = 'id_unit';
-    public $order = 'DESC';
+    public $order = 'ASC';
 
     function __construct()
     {
@@ -43,6 +43,24 @@ class Unit_model extends CI_Model
         }
         return $dd;
     }
+
+    // get all
+    function get_all2()
+    {
+        $this->db->order_by('deskripsi', $this->order);
+        $this->db->where('id_unit !=', '0');
+        $result = $this->db->get($this->table);
+
+        $dd[''] = '--Pilih Unit--';
+        if ($result->num_rows() > 0) {
+            foreach ($result->result() as $row) {
+            // tentukan value (sebelah kiri) dan labelnya (sebelah kanan)
+                $dd[$row->id_unit] = $row->deskripsi;
+            }
+        }
+        return $dd;
+    }
+    
 
     // get data by id
     function get_by_id($id)

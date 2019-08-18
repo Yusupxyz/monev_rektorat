@@ -19,6 +19,7 @@ class Kegiatan extends CI_Controller
         $this->load->model('Sub_komponen_model');
         $this->load->model('Tahun_model');
         $this->load->model('Users_model');
+        $this->load->model('Realisasi_model');
         $this->load->library('form_validation');
         $this->tahun = $this->Tahun_model->get_by_aktif()->id_tahun;
     }
@@ -275,6 +276,22 @@ class Kegiatan extends CI_Controller
                     );
                     $id_kegiatan = $this->Kegiatan_model->get_id_kegiatan($i - 1, $id_unit)->id_kegiatan;
                     $this->Kegiatan_model->update($id_kegiatan, $sum);
+                }
+
+                //insert realiasi dari subkomponen
+                if(!$this->Realisasi_model->is_exist($this->input->post('id_subkomponen'))){
+                    for($i=1;$i<13;$i++){
+                        $data = array(
+                            'id_subkomponen' => $this->input->post('id_subkomponen'),
+                            'id_bulan' => $i,
+                            'id_unit' => $this->user->id_unit,
+                            'ukuran_keberhasilan' => '-',
+                            'uraian_hasil' => '-',
+                            'kendala' => '-',
+                            'keterangan' => '-'
+                        );
+                        $this->Realisasi_model->insert($data);
+                    }
                 }
 
                 $this->session->set_flashdata('message', 'Create Record Success');
