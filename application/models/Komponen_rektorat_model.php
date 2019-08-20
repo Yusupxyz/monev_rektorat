@@ -177,6 +177,31 @@ function sum_by_idsuboutput($id)
     return $this->db->get($this->table)->row();
 }
 
+   // get data by id
+   function count_id_suboutput($id)
+   {
+       $this->db->select('count(*) as jumlah');
+       $this->db->where('id_kegiatan', $id);
+       return $this->db->get($this->table)->row();
+   }
+
+    // get id by group by id_kegiatan
+    function get_id_kegiatan($id)
+    {
+        $this->db->select('komponen_rektorat.id_kegiatan');
+        $this->db->join('kegiatan_rektorat', 'kegiatan_rektorat.id_kegiatan=komponen_rektorat.id_kegiatan', 'left');
+        $this->db->where('kegiatan_rektorat.id_unit', $id);
+        $this->db->group_by('id_kegiatan');
+        return $this->db->get($this->table)->result();
+    }
+
+    // sum sub output data by id
+    function sum_sub_output($id)
+    {
+        $this->db->select('sum(jumlah) as sum');
+        $this->db->where('id_kegiatan', $id);
+        return $this->db->get($this->table)->row();
+    }
 }
 
 /* End of file Komponen_rektorat_model.php */

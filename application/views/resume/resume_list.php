@@ -14,12 +14,7 @@
 
       <div class="box-body">
         <div class="row" style="margin-bottom: 10px">
-            <div class="col-md-12">
-                <?php echo anchor(site_url('kegiatan_rektorat/create'),'<i class="fa fa-plus"></i> Tambah Program Induk', 'class="btn bg-purple"'); ?>
-                <?php echo anchor(site_url('kegiatan_rektorat/create/program'),'<i class="fa fa-plus"></i> Tambah Program', 'class="btn bg-green"'); ?>
-                <?php echo anchor(site_url('kegiatan_rektorat/create/sub_program'),'<i class="fa fa-plus"></i> Tambah Sub Program', 'class="btn bg-maroon"'); ?>
-                <?php echo anchor(site_url('kegiatan_rektorat/create/sub_output'),'<i class="fa fa-plus"></i> Tambah Sub Output', 'class="btn bg-yellow"'); ?>
-            </div>
+  
 
             <div class="col-md-4 text-center">
                 <div style="margin-top: 8px" id="message">
@@ -27,9 +22,9 @@
                 </div>
             </div>
             <div class="col-md-12 text-right">
-                <?php echo anchor(site_url('kegiatan_rektorat/export'),'<i class="fa fa-file-excel-o"></i> Ekspor ke Excel', 'class="btn bg-green"'); ?>
+                <?php echo anchor(site_url('resume/export'),'<i class="fa fa-file-excel-o"></i> Ekspor ke Excel', 'class="btn bg-green"'); ?>
             </div>
-            <div class="col-md-12 text-right"><form action="<?php echo site_url('kegiatan_rektorat/index'); ?>" class="form-inline" method="get" style="margin-top:10px">
+            <div class="col-md-12 text-right"><form action="<?php echo site_url('resume/index'); ?>" class="form-inline" method="get" style="margin-top:10px">
                     <div class="input-group">
                         <input tye="text" class="form-control" name="q" value="<?php echo $q; ?>">
                         <span class="input-group-btn">
@@ -37,7 +32,7 @@
                                 if ($q <> '')
                                 {
                                     ?>
-                                    <a href="<?php echo site_url('kegiatan_rektorat'); ?>" class="btn btn-default">Reset</a>
+                                    <a href="<?php echo site_url('resume'); ?>" class="btn btn-default">Reset</a>
                                     <?php
                                 }
                             ?>
@@ -47,7 +42,7 @@
                 </form>
             </div>
         </div>
-        <form method="post" action="<?= site_url('kegiatan_rektorat/deletebulk');?>" id="formbulk">
+        <form method="post" action="<?= site_url('resume/deletebulk');?>" id="formbulk">
         <table class="table table-bordered" style="margin-bottom: 10px" style="width:100%">
             <tr>
                 <th style="width: 10px;"><input type="checkbox" name="selectall" /></th>
@@ -60,15 +55,14 @@
 		<th>Realisasi Capaian Fisik</th>
 		<th>Realisasi Jumlah Capaian</th>
 		<th>Unit</th>
-		<th>Action</th>
             </tr><?php
             $i=0;
             $j=0;
 
-            foreach ($kegiatan_rektorat_data as $kegiatan)
+            foreach ($kegiatan_data as $kegiatan)
             {
-                $jumlah = $kegiatan->jumlah;
-                $jumlah_capaian = $kegiatan->jumlah_capaian;
+                $jumlah = $data_jumlah_kegiatan[$i]->jumlah;
+                $jumlah_capaian = $data_jumlah_kegiatan[$i]->jc;
                 ?>
                 <tr>
                 
@@ -83,19 +77,7 @@
 			<td><?php echo $kegiatan->capaian."%" ?></td>
 			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
 			<td><?php echo $kegiatan->deskripsi ?></td>
-			<td style="text-align:center" width="200px">
-                <?php 
-                if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
-                    if($count_child[$i]->jumlah_anak=='0'){
-                    echo anchor(site_url('kegiatan_rektorat/create/komponen/'.$kegiatan->id_kegiatan),'<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-success"  data-toggle="tooltip" title="Tambah Komponen"'); 
-                    echo ' '; 
-                    }
-                }
-				// echo anchor(site_url('kegiatan_rektorat/update/'.$kegiatan->id_kegiatan),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
-				echo ' '; 
-				echo anchor(site_url('kegiatan_rektorat/delete/'.$kegiatan->id_kegiatan),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan_rektorat/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
-            ?>
-			</td>
+	
 		</tr>
         <?php 
         //Komponen
@@ -103,9 +85,10 @@
                     if($count_child[$i]->jumlah_anak=='0'){
                        
                         if (isset($komponen[$i][0])){ 
+                            $v=0;
                             foreach ($komponen[$i] as $key => $value) { 
-                                $jumlah = $value->jumlah; 
-                                $jumlah_capaian = $value->jumlah_capaian;
+                                $jumlah = $data_komponen[$i][$v]->jumlah; 
+                                $jumlah_capaian = $data_komponen[$i][$v]->jc; 
                                 ?>
                         <tr>
                             <td></td>
@@ -113,23 +96,11 @@
                             <td><?php echo $value->kode_komponen; ?></td>
                             <td><?php echo $value->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-                            <td><?php echo $value->rencana_capaian."%" ?></td>
-                            <td><?php echo $value->capaian."%" ?></td>
+                            <td><?php echo $data_komponen[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah ."%" ?></td>
+                            <td><?php echo $data_komponen[$i][$v]->c/$count_jumlah[$i][$v++]->jumlah ."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
                             <td><?php echo $value->deskripsi ?></td>
-                            <td style="text-align:center" width="200px">
-                            <?php 
-                                if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
-                                    if($count_child[$i]->jumlah_anak=='0'){
-                                    echo anchor(site_url('kegiatan_rektorat/create/subkomponen/'.$value->id_komponen),'<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-default"  data-toggle="tooltip" title="Tambah Sub Komponen"'); 
-                                    echo ' '; 
-                                    }
-                                }
-                                echo anchor(site_url('kegiatan_rektorat/update_komponen/'.$value->id_komponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
-                                echo ' '; 
-                                echo anchor(site_url('kegiatan_rektorat/delete_komponen/'.$value->id_komponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
-                              ?>
-                            </td>
+     
                         </tr> 
                         
                    <?php
@@ -152,21 +123,12 @@
                             <td><?php echo $value1->capaian."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian1).""; ?></td>
                             <td><?php echo $value1->deskripsi ?></td>
-                            <td style="text-align:center" width="200px">
-                            <?php 
-                                echo anchor(site_url('kegiatan_rektorat/update_subkomponen/'.$value1->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
-                                echo ' '; 
-                                echo anchor(site_url('kegiatan_rektorat/delete_subkomponen/'.$value1->id_subkomponen),' <i class="fa fa-trash"></i>','class="btn btn-xs btn-danger" onclick="javasciprt: return confirmdelete(\'kegiatan/delete/'.$kegiatan->id_kegiatan.'\')"  data-toggle="tooltip" title="Delete" '); 
-                                echo anchor(site_url('realisasi_rektorat/'.$value1->id_subkomponen),' <i class="fa fa-plus"></i>','class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Realisasi" '); 
-                              ?>
-                            </td>
+    
                         </tr> 
                         
                    <?php
                         }}                        
-                    }
-                       
-                        
+                    }                 
                     }
                     $j++;
                 }

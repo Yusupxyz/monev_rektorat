@@ -104,9 +104,8 @@ class Kegiatan_model extends CI_Model
     function get_limit_data($limit, $start = 0, $q = NULL, $i, $tahun)
     {
         $this->db->like('id_kegiatan', $q);
-
         $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode');
-        // $this->db->where()
+        $this->db->join('unit', 'kegiatan.id_unit=unit.id_unit');
         $this->db->where('kegiatan.id_unit', $i);
         $this->db->where('kegiatan.id_tahun', $tahun);
         $this->db->limit($limit, $start);
@@ -213,6 +212,14 @@ class Kegiatan_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    // sum_by_jenis_unit
+    function sum_jumlah($kode)
+    {
+        $this->db->select(' sum(jumlah) as jumlah, sum(jumlah_capaian) as jc');
+        $this->db->where('kode_m_dat', $kode);
+        return $this->db->get($this->table)->row();
     }
 }
 

@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Kegiatan_rektorat extends CI_Controller
+class Resume extends CI_Controller
 {
     public $tahun ="";
     public $group_id="";
@@ -82,13 +82,13 @@ class Kegiatan_rektorat extends CI_Controller
             'group_id' => $this->group_id,
             'id_unit' => $b
         );
-        $data['title'] = 'RKA Kegiatan Rektorat';
+        $data['title'] = 'Resume Kegiatan Universitas Palangka Raya';
         $data['subtitle'] = '';
         $data['crumb'] = [
             'Kegiatan Rektorat' => '',
         ];
         $data['code_js'] = 'kegiatan_rektorat/codejs';
-        $data['page'] = 'kegiatan_rektorat/Kegiatan_rektorat_list';
+        $data['page'] = 'resume/Kegiatan_rektorat_list';
         $this->load->view('template/backend', $data);
     }
 
@@ -224,7 +224,7 @@ class Kegiatan_rektorat extends CI_Controller
     {
         $this->_rules();
         $user = $this->ion_auth->user()->row();
-        $id_unit=$user->id_unit;
+
         if ($this->form_validation->run() == FALSE) {
             $this->create();
         } else {    
@@ -239,38 +239,38 @@ class Kegiatan_rektorat extends CI_Controller
         if(! $this->Sub_komponen_rektorat_model->is_exist($this->input->post('id_subkomponen'))){
             $this->Sub_komponen_rektorat_model->insert($data);
           
-            //update komponen
-            $id_komponen=$this->Komponen_rektorat_model->get_id_komponen($id_unit);
-            foreach ($id_komponen as $key => $value) {
-                if (!isset($this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum)){
-                    $sum_komponen = array(
-                        'jumlah' => '0'
-                    );
-                }else{
-                    $sum_komponen = array(
-                        'jumlah' => $this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum
-                    );
-                }
-                $this->Komponen_rektorat_model->update($value->id_komponen,$sum_komponen);
-            }
+            // //update komponen
+            // $id_komponen=$this->Komponen_rektorat_model->get_id_komponen($id_unit);
+            // foreach ($id_komponen as $key => $value) {
+            //     if (!isset($this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum)){
+            //         $sum_komponen = array(
+            //             'jumlah' => '0'
+            //         );
+            //     }else{
+            //         $sum_komponen = array(
+            //             'jumlah' => $this->Sub_komponen_rektorat_model->sum_komponen($value->id_komponen)->sum
+            //         );
+            //     }
+            //     $this->Komponen_rektorat_model->update($value->id_komponen,$sum_komponen);
+            // }
             
-            //update sub output
-            $id_kegiatan=$this->Komponen_rektorat_model->get_id_kegiatan($id_unit);
-            foreach ($id_kegiatan as $key => $value) {
-                $sum_sub_output = array(
-                    'jumlah' => $this->Komponen_rektorat_model->sum_sub_output($value->id_kegiatan)->sum
-                );
-                $this->Kegiatan_rektorat_model->update($value->id_kegiatan,$sum_sub_output);
-            }
+            // //update sub output
+            // $id_kegiatan=$this->Komponen_rektorat_model->get_id_kegiatan($id_unit);
+            // foreach ($id_kegiatan as $key => $value) {
+            //     $sum_sub_output = array(
+            //         'jumlah' => $this->Komponen_rektorat_model->sum_sub_output($value->id_kegiatan)->sum
+            //     );
+            //     $this->Kegiatan_rektorat_model->update($value->id_kegiatan,$sum_sub_output);
+            // }
 
-            //update kegiatan
-            for ($i=4;$i>1;$i--){
-                $sum = array(
-                    'jumlah' => $this->Kegiatan_rektorat_model->sum($i,$id_unit)->sum
-                );
-                $id_kegiatan= $this->Kegiatan_rektorat_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
-                $this->Kegiatan_rektorat_model->update($id_kegiatan,$sum);
-            }
+            // //update kegiatan
+            // for ($i=4;$i>1;$i--){
+            //     $sum = array(
+            //         'jumlah' => $this->Kegiatan_rektorat_model->sum($i,$id_unit)->sum
+            //     );
+            //     $id_kegiatan= $this->Kegiatan_rektorat_model->get_id_kegiatan($i-1,$id_unit)->id_kegiatan;
+            //     $this->Kegiatan_rektorat_model->update($id_kegiatan,$sum);
+            // }
 
             $this->session->set_flashdata('message', 'Create Record Success');
             redirect(site_url('kegiatan_rektorat'));
@@ -353,152 +353,6 @@ class Kegiatan_rektorat extends CI_Controller
         }
     }
     
-    public function update_komponen($id_komponen)
-    {
-        $row = $this->Kegiatan_rektorat_model->get_by_id_komponen($id_komponen);
-        $id_unit='0';
-        if ($row) {
-            $data = array(
-                'button' => 'Update',
-                'action' => site_url('kegiatan_rektorat/update_action_komponen'),
-                'id_komponen' => set_value('id_komponen', $row->id_komponen),
-                'kode_komponen' => set_value('kode_komponen', $row->kode_komponen),
-                'uraian_kegiatan' => set_value('uraian_kegiatan', $row->uraian_kegiatan),
-                'volume' => set_value('volume', $row->volume),
-                'satuan' => set_value('satuan', $row->satuan),
-                'id_unit' => set_value('id_unit', $id_unit),
-
-            );
-            $data['title'] = 'komponen';
-            $data['subtitle'] = '';
-            $data['crumb'] = [
-                'Dashboard' => '',
-            ];
-
-            $data['page'] = 'kegiatan_rektorat/Kegiatan_form_edit_komponen';
-            $this->load->view('template/backend', $data);
-        } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
-            //redirect(site_url('kegiatan/' . $this->uri->segment(4)));
-            redirect(site_url('kegiatan/' . $id_unit));
-        }
-    }
-
-    public function update_action_komponen()
-    {
-        $this->_rules();
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_komponen', TRUE));
-        } else {
-            $data = array(
-                'id_komponen' => $this->input->post('id_komponen', TRUE),
-                'kode_komponen' => $this->input->post('kode_komponen', TRUE),
-                'uraian_kegiatan' => $this->input->post('uraian_kegiatan', TRUE),
-                'volume' => $this->input->post('volume', TRUE),
-                'satuan' => $this->input->post('satuan', TRUE),
-            );
-            // echo "<pre>";
-            // var_dump($data);
-            // echo "</pre>";
-            $this->Kegiatan_model->update_komponen($this->input->post('id_komponen', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
-
-            redirect(site_url('kegiatan/' . $this->input->post('id_unit', TRUE)));
-        }
-    }
-    //update_subkomponen
-    public function update_subkomponen($id_unit, $id_subkomponen)
-    {
-        $row = $this->Kegiatan_model->get_by_id_subkomponen($id_subkomponen);
-
-        if ($row) {
-            $data = array(
-                'button' => 'Update',
-                'action' => site_url('kegiatan/update_action_subkomponen'),
-                'id_subkomponen' => set_value('id_subkomponen', $row->id_subkomponen),
-                'kode_subkomponen' => set_value('kode_subkomponen', $row->kode_subkomponen),
-                'uraian_kegiatan' => set_value('uraian_kegiatan', $row->uraian_kegiatan),
-                'volume' => set_value('volume', $row->volume),
-                'satuan' => set_value('satuan', $row->satuan),
-                'jumlah' => set_value('jumlah', $row->jumlah),
-                'id_unit' => set_value('id_unit', $id_unit),
-
-            );
-            $data['title'] = 'Sub komponen';
-            $data['subtitle'] = '';
-            $data['crumb'] = [
-                'Dashboard' => '',
-            ];
-
-            $data['page'] = 'kegiatan/Kegiatan_form_edit_subkomponen';
-            $this->load->view('template/backend', $data);
-        } else {
-            $this->session->set_flashdata('message', 'Record Not Found');
-            //redirect(site_url('kegiatan/' . $this->uri->segment(4)));
-            redirect(site_url('kegiatan/' . $id_unit));
-        }
-    }
-
-    public function update_action_subkomponen()
-    {
-        $this->_rules();
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id_subkomponen', TRUE));
-        } else {
-            $data = array(
-                'id_subkomponen' => $this->input->post('id_subkomponen', TRUE),
-                'kode_subkomponen' => $this->input->post('kode_subkomponen', TRUE),
-                'uraian_kegiatan' => $this->input->post('uraian_kegiatan', TRUE),
-                'volume' => $this->input->post('volume', TRUE),
-                'satuan' => $this->input->post('satuan', TRUE),
-                'jumlah' => $this->input->post('jumlah', TRUE),
-
-
-            );
-            // echo "<pre>";
-            // var_dump($data);
-            // echo "</pre>";
-            $this->Kegiatan_model->update_subkomponen($this->input->post('id_subkomponen', TRUE), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
-            //update komponen
-            $id_komponen = $this->Komponen_model->get_id_komponen($this->input->post('id_unit'));
-            foreach ($id_komponen as $key => $value) {
-                if (!isset($this->Sub_komponen_model->sum_komponen($value->id_komponen)->sum)) {
-                    $sum_komponen = array(
-                        'jumlah' => '0'
-                    );
-                } else {
-                    $sum_komponen = array(
-                        'jumlah' => $this->Sub_komponen_model->sum_komponen($value->id_komponen)->sum
-                    );
-                }
- 
-                $this->Komponen_model->update($value->id_komponen, $sum_komponen);
-            }
-
-            //update sub output
-            $id_kegiatan = $this->Komponen_model->get_id_kegiatan($this->input->post('id_unit'));
-            foreach ($id_kegiatan as $key => $value) {
-                $sum_sub_output = array(
-                    'jumlah' => $this->Komponen_model->sum_sub_output($value->id_kegiatan)->sum
-                );
-                $this->Kegiatan_model->update($value->id_kegiatan, $sum_sub_output);
-            }
-
-            //update kegiatan
-            for ($i = 4; $i > 1; $i--) {
-                $sum = array(
-                    'jumlah' => $this->Kegiatan_model->sum($i, $this->input->post('id_unit'))->sum
-                );
-                $id_kegiatan = $this->Kegiatan_model->get_id_kegiatan($i - 1, $this->input->post('id_unit'))->id_kegiatan;
-                $this->Kegiatan_model->update($id_kegiatan, $sum);
-            }
-            redirect(site_url('kegiatan/' . $this->input->post('id_unit', TRUE)));
-        }
-    }
-
     public function delete($id) 
     {
         $row = $this->Kegiatan_rektorat_model->get_by_id($id);

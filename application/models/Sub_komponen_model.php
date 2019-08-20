@@ -54,6 +54,23 @@ class Sub_komponen_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+     // get id komponen by id subkomponen
+     function get_data_by_kode($kode)
+     {
+         $this->db->select('sum(sub_komponen.jumlah) as jumlah, sum(sub_komponen.rencana_capaian) as rc, sum(sub_komponen.capaian) as c, sum(sub_komponen.jumlah_capaian) as jc');
+         $this->db->join('komponen', 'komponen.id_komponen=sub_komponen.id_komponen','left');
+         $this->db->where('kode_komponen', $kode);
+         return $this->db->get($this->table)->row();
+     }
+     // get id komponen by id subkomponen
+     function count_by_kode($kode)
+     {
+         $this->db->select('count(*) as jumlah');
+         $this->db->join('komponen', 'komponen.id_komponen=sub_komponen.id_komponen','left');
+         $this->db->where('kode_komponen', $kode);
+         return $this->db->get($this->table)->row();
+     }
+
     // get data by id_komponen
     function get_by_id_komponen($i,$b,$tahun)
     {
@@ -67,13 +84,14 @@ class Sub_komponen_model extends CI_Model
     }
 
     // get data by id_komponen
-    function get_by_id_komponen_rektorat($i,$b,$tahun)
+    function get_by_id_komponen_resume($i,$tahun)
     {
         $result=$this->db->query (
-            'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON sub_komponen.id_komponen=komponen.id_komponen LEFT JOIN kegiatan ON 
-                kegiatan.id_kegiatan=komponen.id_kegiatan LEFT JOIN unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
-                (select kode_komponen from komponen_rektorat LEFT JOIN kegiatan_rektorat on komponen_rektorat.id_kegiatan = kegiatan_rektorat.id_kegiatan 
-                where kegiatan_rektorat.id_tahun = '.$tahun.' limit '.$i.',1)')->result();
+            'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON komponen.id_komponen=sub_komponen.id_komponen
+            LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
+                (select kode_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_tahun = '.$tahun.'
+                  limit '.$i.',1)')->result();
         return $result;
     }
 
@@ -158,19 +176,43 @@ class Sub_komponen_model extends CI_Model
         $this->db->where_in($this->id, $arr_id);
         return $this->db->delete($this->table);
     }
-//check pk data is exists 
 
-        function is_exist($id){
-         $query = $this->db->get_where($this->table, array($this->id => $id));
-         $count = $query->num_rows();
-         if($count > 0){
-            return true;
-         }else{
-            return false;
-         }
+    //check pk data is exists 
+    function is_exist($id){
+        $query = $this->db->get_where($this->table, array($this->id => $id));
+        $count = $query->num_rows();
+        if($count > 0){
+        return true;
+        }else{
+        return false;
         }
+    }
 
+    // get data by id
+    function count_id_komponen($id)
+    {
+        $this->db->select('count(*) as jumlah');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
 
+    // get data by id
+    function count_kode_komponen($kode)
+    {
+        $this->db->select('count(*) as jumlah');
+        $this->db->join('komponen', 'komponen.id_komponen=sub_komponen.id_komponen','left');
+        $this->db->where('kode_komponen', $kode);
+        return $this->db->get($this->table)->row();
+    }
+    
+     // get data by id_komponen
+     function get_by_id_kode($id,$kode)
+     {
+        $this->db->where('id_komponen', $id);
+        $this->db->where('kode_subkomponen', $kode);
+        return $this->db->get($this->table)->row();
+     }
+    
 }
 
 /* End of file Sub_komponen_model.php */

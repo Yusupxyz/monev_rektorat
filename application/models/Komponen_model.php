@@ -28,6 +28,8 @@ class Komponen_model extends CI_Model
         $this->db->where($this->id, $id);
         return $this->db->get($this->table)->row();
     }
+    
+
 
     // get id by group by id_kegiatan
     function get_id_komponen($id)
@@ -37,6 +39,15 @@ class Komponen_model extends CI_Model
         $this->db->where('kegiatan.id_unit', $id);
         $this->db->group_by('id_komponen');
         return $this->db->get($this->table)->result();
+    }
+
+    // get by kode komponen
+    function get_by_kode_komponen($kode)
+    {
+        $this->db->join('kegiatan', 'kegiatan.id_kegiatan=komponen.id_kegiatan', 'left');
+        $this->db->where('kode_komponen', $kode);
+        $this->db->where('id_unit', '0');
+        return $this->db->get($this->table)->row();
     }
 
     // get id komponen by id subkomponen
@@ -77,10 +88,10 @@ class Komponen_model extends CI_Model
     // get data by id_kegiatan
     function get_by_id_kegiatan($i, $b, $tahun)
     {
-        $result = $this->db->query(
-            'SELECT * FROM komponen WHERE id_kegiatan = 
-                     (select id_kegiatan from kegiatan where id_unit=' . $b . ' AND id_tahun=' . $tahun . ' limit ' . $i . ',1)'
-        )->result();
+        $result=$this->db->query (
+            'SELECT komponen.*, unit.* FROM komponen LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.id_kegiatan = 
+                     (select id_kegiatan from kegiatan where id_unit='.$b.' AND id_tahun='.$tahun.' limit '.$i.',1)')->result();
         return $result;
     }
 
@@ -160,12 +171,22 @@ class Komponen_model extends CI_Model
     function count_child($i, $b)
     {
         $result = $this->db->query(
-            'SELECT count(*) as "jumlah_anak" FROM komponen 
-         LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
-         WHERE sub_komponen.id_komponen=(SELECT id_komponen from sub_komponen limit ' . $i . ',1)'
+            'Select count(*) as "jumlah_anak" FROM sub_komponen LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
+            WHERE komponen.kode_komponen=(SELECT kode_komponen from komponen LEFT JOIN kegiatan ON 
+            kegiatan.id_kegiatan=komponen.id_kegiatan WHERE id_unit="0" limit ' . $i . ',1)'
         )->row();
         return $result;
     }
+
+     // get jumlah anak unit by id
+     function count_child_unit($i,$b)
+     {
+         $result=$this->db->query (
+             'SELECT count(*) as "jumlah_anak" FROM komponen 
+             LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
+             WHERE komponen.kode_komponen=(SELECT kode_komponen from sub_komponen limit '.$i.',1)')->row();
+         return $result;
+     }
 
     // get jumlah anak dari unit by id
     function count_all_child($kode)
@@ -187,6 +208,15 @@ class Komponen_model extends CI_Model
             WHERE kegiatan.id_unit = ' . $b . ' ')->row();
         return $result;
     }
+
+    // get data by id
+    function count_id_suboutput($id)
+    {
+        $this->db->select('count(*) as jumlah');
+        $this->db->where('id_kegiatan', $id);
+        return $this->db->get($this->table)->row();
+    }
+
 }
 
 /* End of file Komponen_model.php */

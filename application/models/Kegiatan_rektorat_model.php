@@ -9,7 +9,10 @@ class Kegiatan_rektorat_model extends CI_Model
     public $table = 'kegiatan_rektorat';
     public $id = 'id_kegiatan';
     public $order = 'DESC';
-
+    public $table2 = 'sub_komponen';
+    public $table3 = 'komponen';
+    public $table4 = 'kegiatan';
+    
     function __construct()
     {
         parent::__construct();
@@ -96,10 +99,9 @@ class Kegiatan_rektorat_model extends CI_Model
     }
 
     // update data by kode m_dat
-    function update_bykode($id, $data, $id_unit)
+    function update_bykode($id, $data)
     {
         $this->db->where('kode_m_dat', $id);
-        $this->db->where('id_unit', $id_unit);
         $this->db->update($this->table, $data);
     }
 
@@ -138,7 +140,32 @@ class Kegiatan_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+     // get sum by jenis dan idunit
+     function sum($i, $id)
+     {
+         $this->db->select('sum(jumlah) as sum');
+         $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode', 'left');
+         $this->db->where('id_unit', $id);
+         $this->db->where('jenis', $i);
+         return $this->db->get($this->table)->row();
+     }
 
+    // get id_kegiatan by jenis dan idunit
+    function get_id_kegiatan($i, $id)
+    {
+        $this->db->select('id_kegiatan');
+        $this->db->join('m_dat', 'kegiatan_rektorat.kode_m_dat=m_dat.kode', 'left');
+        $this->db->where('id_unit', $id);
+        $this->db->where('jenis', $i);
+        return $this->db->get($this->table)->row();
+    }
+
+      // komponenn
+      function get_by_id_komponen($id)
+      {
+          $this->db->where('id_komponen', $id);
+          return $this->db->get($this->table3)->row();
+      }
 }
 
 /* End of file Kegiatan_rektorat_model.php */

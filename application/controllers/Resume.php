@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Kegiatan extends CI_Controller
+class Resume extends CI_Controller
 {
     public $tahun = "";
     public $group_id = "";
@@ -61,17 +61,34 @@ class Kegiatan extends CI_Controller
 
         for ($i = 0; $i < $this->Komponen_model->count_komponen($b)->count; $i++) {
             $count_child_komponen[] = $this->Komponen_model->count_child($i, $b);
-            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i, $b, $this->tahun);
+            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun);
         }
 
-        // echo "<pre>"; print_r($subkomponen);echo"</pre>";
+        foreach ($kegiatan as $key ) { 
+            $data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+        }
+
+        for ($i=0; $i < count($komponen) ; $i++) { 
+            if (isset($komponen[$i][0])){ 
+                foreach ($komponen[$i] as $key => $value) { 
+                    $data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+                    $count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+                }
+            }else{
+                $data_jumlah[$i]='';
+                $count_jumlah[$i]='';
+            }
+        }
+
+
+        // echo "<pre>"; print_r($data_jumlah_kegiatan);echo"</pre>";
+        
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
         $data = array(
             'kegiatan_data' => $kegiatan,
             'q' => $q,
-            'title' => $title,
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
@@ -79,20 +96,20 @@ class Kegiatan extends CI_Controller
             'count_child_komponen' => $count_child_komponen,
             'komponen' => $komponen,
             'subkomponen' => $subkomponen,
+            'data_komponen' => $data_jumlah,
+            'data_jumlah_kegiatan' => $data_jumlah_kegiatan,
+            'count_jumlah' => $count_jumlah,
             'group_id' => $this->group_id,
             'id_unit' => $b
         );
-        $data['title'] = $title;
+        $data['title'] = 'Resume';
         $data['subtitle'] = '';
         $data['crumb'] = [
             'Kegiatan' => '',
         ];
         $data['code_js'] = 'kegiatan/codejs';
-        $data['page'] = 'kegiatan/Kegiatan_list';
-        // if ($b == '0') {
-        //     redirect(site_url('kegiatan_rektorat'));
-        //     // $data['page'] = 'kegiatan/Kegiatan_list';
-        // }
+        $data['page'] = 'resume/resume_list';
+
         $this->load->view('template/backend', $data);
     }
 
@@ -279,13 +296,12 @@ class Kegiatan extends CI_Controller
                 }
 
                 //insert realiasi dari subkomponen
-                $id_subkomponen=$this->Sub_komponen_model->get_by_id_kode($id,$this->input->post('kode_subkomponen', TRUE))->id_subkomponen;
-                if(!$this->Realisasi_model->is_exist($id_subkomponen)){
+                if(!$this->Realisasi_model->is_exist($this->input->post('id_subkomponen'))){
                     for($i=1;$i<13;$i++){
                         $data = array(
-                            'id_subkomponen' => $id_subkomponen,
+                            'id_subkomponen' => $this->input->post('id_subkomponen'),
                             'id_bulan' => $i,
-                            'id_unit' => $id_unit,
+                            'id_unit' => $this->user->id_unit,
                             'ukuran_keberhasilan' => '-',
                             'uraian_hasil' => '-',
                             'kendala' => '-',

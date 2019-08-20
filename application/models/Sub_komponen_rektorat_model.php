@@ -158,6 +158,21 @@ class Sub_komponen_rektorat_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    // get data by id
+    function count_id_komponen($id)
+    {
+        $this->db->select('count(*) as jumlah');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    // sum komponen data by id
+    function sum_komponen($id)
+    {
+        $this->db->select('sum(jumlah) as sum');
+        $this->db->where('id_komponen', $id);
+        return $this->db->get($this->table)->row();
+    }
 
 }
 
