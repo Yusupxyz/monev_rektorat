@@ -132,7 +132,7 @@ function removeRow(input) {
     barChart.Bar(barChartData, barChartOptions)
 
 
-    <?php if (isset($labels2)) { ?>
+    <?php if (isset($dataset2)) { ?>
       var areaChartData2 = {
       labels  : ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
       datasets: [

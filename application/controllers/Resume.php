@@ -80,6 +80,31 @@ class Resume extends CI_Controller
             }
         }
 
+        $v=0;
+        for ($i=0; $i < count($data_jumlah) ; $i++) {
+            $jumlah_rc=0;
+            $jumlah_c=0; 
+            if (isset($data_jumlah[$i][0])){ 
+                $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
+                $jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
+            }
+            $data_suboutput[$i]['jc']=$jumlah_rc;
+            $data_suboutput[$i]['c']=$jumlah_c;
+        }
+        
+        for ($i=0; $i < count($data_suboutput) ; $i++) {
+            $jumlah_rc=0;
+            $jumlah_c=0; 
+            $data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
+            $data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+        }
+
+        for ($i=0; $i < count($data_subprogram) ; $i++) {
+            $jumlah_rc=0;
+            $jumlah_c=0; 
+            $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
+            $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+        }
 
         // echo "<pre>"; print_r($data_jumlah_kegiatan);echo"</pre>";
         
@@ -98,7 +123,10 @@ class Resume extends CI_Controller
             'subkomponen' => $subkomponen,
             'data_komponen' => $data_jumlah,
             'data_jumlah_kegiatan' => $data_jumlah_kegiatan,
-            'count_jumlah' => $count_jumlah,
+            'data_suboutput' => $data_suboutput,
+            'data_subprogram' => $data_subprogram,
+            'data_program' => $data_program,
+            'count_jumlah' => $count_jumlah ,
             'group_id' => $this->group_id,
             'id_unit' => $b
         );

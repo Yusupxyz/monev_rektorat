@@ -113,6 +113,17 @@ class Kegiatan_model extends CI_Model
         return $this->db->get($this->table)->result();
     }
 
+    // get data with limit and search
+    function get_data($i, $tahun)
+    {
+        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode');
+        $this->db->join('unit', 'kegiatan.id_unit=unit.id_unit');
+        $this->db->where('kegiatan.id_unit', $i);
+        $this->db->where('kegiatan.id_tahun', $tahun);
+        $this->db->order_by('kode_m_dat', 'ASC');
+        return $this->db->get($this->table)->result();
+    }
+
     // sum_by_jenis_unit
     function sum_by_jenis_unit($id_unit)
     {

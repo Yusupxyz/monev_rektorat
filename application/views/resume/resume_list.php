@@ -58,11 +58,21 @@
             </tr><?php
             $i=0;
             $j=0;
-
             foreach ($kegiatan_data as $kegiatan)
             {
                 $jumlah = $data_jumlah_kegiatan[$i]->jumlah;
                 $jumlah_capaian = $data_jumlah_kegiatan[$i]->jc;
+                if ($i==0 || $i==1){
+                    $jc = $data_program[3]['jc']; 
+                    $c = $data_program[3]['c']; 
+                }elseif ($i==2) {
+                    $jc = $data_subprogram[3]['jc']; 
+                    $c = $data_subprogram[3]['c']; 
+                }else{
+                    $jc = $data_suboutput[3]['jc']; 
+                    $c = $data_suboutput[3]['c']; 
+                }
+
                 ?>
                 <tr>
                 
@@ -73,8 +83,8 @@
 			<td><?php echo $kegiatan->kode_m_dat ?></td>
 			<td><?php echo $kegiatan->ket ?></td>
 			<td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-			<td><?php echo $kegiatan->rencana_capaian."%" ?></td>
-			<td><?php echo $kegiatan->capaian."%" ?></td>
+			<td><?php echo $jc."%" ?></td>
+			<td><?php echo $c."%" ?></td>
 			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
 			<td><?php echo $kegiatan->deskripsi ?></td>
 	
@@ -96,8 +106,8 @@
                             <td><?php echo $value->kode_komponen; ?></td>
                             <td><?php echo $value->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
-                            <td><?php echo $data_komponen[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah ."%" ?></td>
-                            <td><?php echo $data_komponen[$i][$v]->c/$count_jumlah[$i][$v++]->jumlah ."%" ?></td>
+                            <td><?php echo round($data_komponen[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah) ."%" ?></td>
+                            <td><?php echo round($data_komponen[$i][$v]->c/$count_jumlah[$i][$v++]->jumlah) ."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
                             <td><?php echo $value->deskripsi ?></td>
      
@@ -119,8 +129,8 @@
                             <td><?php echo $value1->kode_subkomponen; ?></td>
                             <td><?php echo $value1->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah1).""; ?></td>
-                            <td><?php echo $value1->rencana_capaian."%" ?></td>
-                            <td><?php echo $value1->capaian."%" ?></td>
+                            <td><?php echo round($value1->rencana_capaian)."%" ?></td>
+                            <td><?php echo round($value1->capaian)."%" ?></td>
                             <td><?php echo "Rp.".nominal($jumlah_capaian1).""; ?></td>
                             <td><?php echo $value1->deskripsi ?></td>
     
