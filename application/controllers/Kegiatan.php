@@ -64,6 +64,7 @@ class Kegiatan extends CI_Controller
             $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i, $b, $this->tahun);
         }
 
+        // echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
         // echo "<pre>"; print_r($subkomponen);echo"</pre>";
         $this->load->library('pagination');
         $this->pagination->initialize($config);

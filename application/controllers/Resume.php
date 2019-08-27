@@ -64,49 +64,53 @@ class Resume extends CI_Controller
             $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun);
         }
 
-        foreach ($kegiatan as $key ) { 
-            $data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+        if (isset($kegiatan)){
+            foreach ($kegiatan as $key ) { 
+                $data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+            }
         }
 
-        for ($i=0; $i < count($komponen) ; $i++) { 
-            if (isset($komponen[$i][0])){ 
-                foreach ($komponen[$i] as $key => $value) { 
-                    $data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
-                    $count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+        if (isset($komponen)){
+            for ($i=0; $i < count($komponen) ; $i++) { 
+                if (isset($komponen[$i][0])){ 
+                    foreach ($komponen[$i] as $key => $value) { 
+                        $data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+                        $count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+                    }
+                }else{
+                    $data_jumlah[$i]='';
+                    $count_jumlah[$i]='';
                 }
-            }else{
-                $data_jumlah[$i]='';
-                $count_jumlah[$i]='';
+            }
+
+            $v=0;
+            for ($i=0; $i < count($data_jumlah) ; $i++) {
+                $jumlah_rc=0;
+                $jumlah_c=0; 
+                if (isset($data_jumlah[$i][0])){ 
+                    if ($count_jumlah[$i][$v]->jumlah!=0){
+                        $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
+                        $jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
+                    }
+                }
+                $data_suboutput[$i]['jc']=$jumlah_rc;
+                $data_suboutput[$i]['c']=$jumlah_c;
+            }
+            
+            for ($i=0; $i < count($data_suboutput) ; $i++) {
+                $jumlah_rc=0;
+                $jumlah_c=0; 
+                $data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
+                $data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+            }
+
+            for ($i=0; $i < count($data_subprogram) ; $i++) {
+                $jumlah_rc=0;
+                $jumlah_c=0; 
+                $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
+                $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
             }
         }
-
-        $v=0;
-        for ($i=0; $i < count($data_jumlah) ; $i++) {
-            $jumlah_rc=0;
-            $jumlah_c=0; 
-            if (isset($data_jumlah[$i][0])){ 
-                $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
-                $jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
-            }
-            $data_suboutput[$i]['jc']=$jumlah_rc;
-            $data_suboutput[$i]['c']=$jumlah_c;
-        }
-        
-        for ($i=0; $i < count($data_suboutput) ; $i++) {
-            $jumlah_rc=0;
-            $jumlah_c=0; 
-            $data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
-            $data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
-        }
-
-        for ($i=0; $i < count($data_subprogram) ; $i++) {
-            $jumlah_rc=0;
-            $jumlah_c=0; 
-            $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
-            $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
-        }
-
-        // echo "<pre>"; print_r($data_jumlah_kegiatan);echo"</pre>";
         
         $this->load->library('pagination');
         $this->pagination->initialize($config);
@@ -117,19 +121,30 @@ class Resume extends CI_Controller
             'pagination' => $this->pagination->create_links(),
             'total_rows' => $config['total_rows'],
             'start' => $start,
-            'count_child' => $count_child,
-            'count_child_komponen' => $count_child_komponen,
-            'komponen' => $komponen,
-            'subkomponen' => $subkomponen,
-            'data_komponen' => $data_jumlah,
-            'data_jumlah_kegiatan' => $data_jumlah_kegiatan,
-            'data_suboutput' => $data_suboutput,
-            'data_subprogram' => $data_subprogram,
-            'data_program' => $data_program,
-            'count_jumlah' => $count_jumlah ,
             'group_id' => $this->group_id,
             'id_unit' => $b
         );
+
+        if (isset($count_child))
+            $data['count_child'] = $count_child;
+        if (isset($count_child_komponen))
+            $data['count_child_komponen'] = $count_child_komponen;
+        if (isset($komponen))
+            $data['komponen'] = $komponen;
+        if (isset($subkomponen))
+            $data['subkomponen'] = $subkomponen;
+        if (isset($data_jumlah))
+            $data['data_komponen'] = $data_jumlah;
+        if (isset($data_jumlah_kegiatan))
+            $data['data_jumlah_kegiatan'] = $data_jumlah_kegiatan;
+        if (isset($data_suboutput))
+            $data['data_suboutput'] = $data_suboutput;
+        if (isset($data_program))
+            $data['data_program'] = $data_program;
+        if (isset($count_jumlah))
+            $data['count_jumlah'] = $count_jumlah;
+
+        // echo "<pre>"; print_r($data_jumlah_kegiatan);echo"</pre>";
         $data['title'] = 'Resume';
         $data['subtitle'] = '';
         $data['crumb'] = [

@@ -30,11 +30,17 @@ class Dashboard extends CI_Controller {
 	public function index()
 	{
 		$this->group_id=$this->Users_model->get_group_id($this->user->id)->group_id;
+		$data['total_pagu']=0;
+		$data['total_serapan_dana']=0;
+		$data['total_realisasi_capaian']=0;
+		$data['total_rencana_capaian']=0;
 		if ($this->group_id=='3' || $this->group_id=='4'){
-			$data['total_pagu']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah;
-			$data['total_serapan_dana'] = $this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah_capaian;
-			$data['total_realisasi_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->capaian;
-			$data['total_rencana_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->rencana_capaian;
+			if (isset($this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah)){
+				$data['total_pagu']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah;
+				$data['total_serapan_dana'] = $this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah_capaian;
+				$data['total_realisasi_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->capaian;
+				$data['total_rencana_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->rencana_capaian;
+			}
 			$data['label']=$this->Komponen_model->get_id_komponen($this->user->id_unit);
 			$i=0;
 			foreach ($data['label'] as $key => $value) {
@@ -67,52 +73,60 @@ class Dashboard extends CI_Controller {
 				$komponen[] = $this->Komponen_model->get_by_id_kegiatan($i, $this->user->id_unit, $this->id_tahun);
 			}
 
-			foreach ($kegiatan as $key ) { 
-				$data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+			if (isset($kegiatan)){
+				foreach ($kegiatan as $key ) { 
+					$data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+				}
 			}
 	
-			for ($i=0; $i < count($komponen) ; $i++) { 
-				if (isset($komponen[$i][0])){ 
-					foreach ($komponen[$i] as $key => $value) { 
-						$data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
-						$count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+			if (isset($komponen)){
+				for ($i=0; $i < count($komponen) ; $i++) { 
+					if (isset($komponen[$i][0])){ 
+						foreach ($komponen[$i] as $key => $value) { 
+							$data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+							$count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+						}
+					}else{
+						$data_jumlah[$i]='';
+						$count_jumlah[$i]='';
 					}
-				}else{
-					$data_jumlah[$i]='';
-					$count_jumlah[$i]='';
 				}
-			}
-	
-			$v=0;
-			for ($i=0; $i < count($data_jumlah) ; $i++) {
-				$jumlah_rc=0;
-				$jumlah_c=0; 
-				if (isset($data_jumlah[$i][0])){ 
-					$jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
-					$jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
+		
+				$v=0;
+				for ($i=0; $i < count($data_jumlah) ; $i++) {
+					$jumlah_rc=0;
+					$jumlah_c=0; 
+					if (isset($data_jumlah[$i][0])){ 
+						$jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
+						$jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
+					}
+					$data_suboutput[$i]['jc']=$jumlah_rc;
+					$data_suboutput[$i]['c']=$jumlah_c;
 				}
-				$data_suboutput[$i]['jc']=$jumlah_rc;
-				$data_suboutput[$i]['c']=$jumlah_c;
+				
+				for ($i=0; $i < count($data_suboutput) ; $i++) {
+					$jumlah_rc=0;
+					$jumlah_c=0; 
+					$data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
+					$data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+				}
+		
+				for ($i=0; $i < count($data_subprogram) ; $i++) {
+					$jumlah_rc=0;
+					$jumlah_c=0; 
+					$data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
+					$data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+				}
 			}
 			
-			for ($i=0; $i < count($data_suboutput) ; $i++) {
-				$jumlah_rc=0;
-				$jumlah_c=0; 
-				$data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
-				$data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+			if(isset($data_jumlah_kegiatan)){
+				$data['total_pagu']=$data_jumlah_kegiatan[0]->jumlah;
+				$data['total_serapan_dana'] = $data_jumlah_kegiatan[0]->jc;
 			}
-	
-			for ($i=0; $i < count($data_subprogram) ; $i++) {
-				$jumlah_rc=0;
-				$jumlah_c=0; 
-				$data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
-				$data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+			if(isset($data_program)){
+				$data['total_realisasi_capaian']=$data_program[3]['jc'];
+				$data['total_rencana_capaian']=$data_program[3]['c'];
 			}
-	
-			$data['total_pagu']=$data_jumlah_kegiatan[0]->jumlah;
-			$data['total_serapan_dana'] = $data_jumlah_kegiatan[0]->jc;
-			$data['total_realisasi_capaian']=$data_program[3]['jc'];
-			$data['total_rencana_capaian']=$data_program[3]['c'];
 
 			$id_unit_unit=$this->Set_unit_chart_model->get_by_id()->id_unit;
 			$data['options']=$this->Unit_model->get_all2();
@@ -159,15 +173,17 @@ class Dashboard extends CI_Controller {
 			if (isset($dataset2))
 			$data['dataset2']=$dataset2;
 
-			// print("<pre>".print_r($data['dataset2'],true)."</pre>");
+			print("<pre>".print_r($data['data_program'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Rektorat '.$this->tahun;
 			$data['title2'] = 'Realisasi Capaian Unit '.$this->tahun;
 		}else{
-			$data['total_pagu']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah;
-			$data['total_serapan_dana'] = $this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah_capaian;
-			$data['total_realisasi_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->capaian;
-			$data['total_rencana_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->rencana_capaian;
+			if (isset($this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah)){
+				$data['total_pagu']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah;
+				$data['total_serapan_dana'] = $this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->jumlah_capaian;
+				$data['total_realisasi_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->capaian;
+				$data['total_rencana_capaian']=$this->Kegiatan_model->sum_by_jenis_unit($this->user->id_unit)->rencana_capaian;
+			}
 			$data['label']=$this->Komponen_model->get_id_komponen($this->user->id_unit);
 			$i=0;
 			
@@ -189,8 +205,9 @@ class Dashboard extends CI_Controller {
 			$data['color']=array("#e6194b","#e6194b", "#3cb44b", "#3cb44b", "#ffe119", "#ffe119", "#4363d8", "#4363d8","#f58231","#f58231"
 								,"#911eb4","#911eb4","#46f0f0","#46f0f0","#f032e6","#f032e6","#bcf60c","#bcf60c","#fabebe","#fabebe"
 								,"#008080","#008080","#e6beff","#e6beff","#9a6324","#9a6324");
+			if (isset($dataset))
 			$data['dataset']=$dataset;
-			// print("<pre>".print_r($data['label2'],true)."</pre>");
+			// print("<pre>".print_r($data['dataset'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya Kementerian Riset, Teknologi dan Pendidikan Tinggi '.$this->tahun;
 		}

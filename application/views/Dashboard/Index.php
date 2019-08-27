@@ -6,7 +6,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Pagu</span>
-              <span class="info-box-number">Rp <?= nominal($total_pagu); ?></span>
+              <span class="info-box-number">Rp <?= isset($total_pagu) ?  nominal($total_pagu) : '0' ?></span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
@@ -25,7 +25,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Serapan Pagu</span>
-              <span class="info-box-number">Rp <?= nominal($total_serapan_dana); ?></span>
+              <span class="info-box-number">Rp <?= isset($total_serapan_dana) ?  nominal($total_pagu) : '0' ?></span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
@@ -45,7 +45,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Rencana Capaian</span>
-              <span class="info-box-number"><?= $total_rencana_capaian; ?> %</span>
+              <span class="info-box-number"><?= isset($total_rencana_capaian) ?  $total_rencana_capaian : '0' ?> %</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
@@ -66,7 +66,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Realisasi Capaian Fisik</span>
-              <span class="info-box-number"><?= $total_realisasi_capaian; ?> %</span>
+              <span class="info-box-number"><?= isset($total_realisasi_capaian) ?  $total_realisasi_capaian : '0' ?> %</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
