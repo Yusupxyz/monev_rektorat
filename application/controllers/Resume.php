@@ -90,35 +90,108 @@ class Resume extends CI_Controller
                     }
                 }
             
-               $v=0;
-            for ($i=0; $i < count($data_jumlah) ; $i++) {
+            for ($i=0; $i < count($data_jumlah) ; $i++) { 
                 $jumlah_rc=0;
-                $jumlah_c=0; 
-                for ($j=0; $j < count($data_jumlah); $j++){
-                    if (isset($data_jumlah[$i][$j])){ 
-                        if ($count_jumlah[$i][$j]->jumlah!=0){
-                            $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$j]->rc/$count_jumlah[$i][$v]->jumlah);
-                            $jumlah_c=$jumlah_c+round($data_jumlah[$i][$j]->c/$count_jumlah[$i][$v]->jumlah);
-                        }
+                $jumlah_c=0;
+                if ($data_jumlah[$i]!=null){
+                    for ($j=0; $j < count($data_jumlah[$i]) ; $j++) { 
+                        $jumlah_rc=$jumlah_rc+$data_jumlah[$i][$j]->rc;
+                        $jumlah_c=$jumlah_c+$data_jumlah[$i][$j]->c;
                     }
-                    $data_suboutput[$i]['jc']=$jumlah_rc;
-                    $data_suboutput[$i]['c']=$jumlah_c;
+                     $jumlah_rc=round($jumlah_rc/count($data_jumlah[$i]));
+                     $jumlah_c=round($jumlah_c/count($data_jumlah[$i]));
                 }
+                $data_suboutput[$i]['jc']=$jumlah_rc;
+                $data_suboutput[$i]['c']=$jumlah_c;
             }
             
-            for ($i=0; $i < count($data_suboutput) ; $i++) {
+            $i=0;
+            foreach ($kegiatan as $key ) {
                 $jumlah_rc=0;
-                $jumlah_c=0; 
-                $data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
-                $data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+                $jumlah_c=0;
+                if ($key->jenis==3){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==4 && $key2->induk==$temp){
+                            $jumlah_rc=$jumlah_rc+$data_suboutput[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_suboutput[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_subprogram[$i]['jc']=$jumlah_rc;
+                    $data_subprogram[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_subprogram[$i]['jc']=$jumlah_rc;
+                    $data_subprogram[$i++]['c']=$jumlah_c;
+                }
             }
 
-            for ($i=0; $i < count($data_subprogram) ; $i++) {
+            $i=0;
+            foreach ($kegiatan as $key ) {
                 $jumlah_rc=0;
-                $jumlah_c=0; 
-                $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
-                $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+                $jumlah_c=0;
+                if ($key->jenis==2){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==3 && $key2->induk==$temp){
+                            $jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_program[$i]['jc']=$jumlah_rc;
+                    $data_program[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_program[$i]['jc']=$jumlah_rc;
+                    $data_program[$i++]['c']=$jumlah_c;
+                }
             }
+
+            $i=0;
+            foreach ($kegiatan as $key ) {
+                $jumlah_rc=0;
+                $jumlah_c=0;
+                if ($key->jenis==2){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==3){
+                            $jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_program_backup[$i]['jc']=$jumlah_rc;
+                    $data_program_backup[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_program_backup[$i]['jc']=$jumlah_rc;
+                    $data_program_backup[$i++]['c']=$jumlah_c;
+                }
+            }
+
+            // $i=0;
+            // foreach ($kegiatan as $key ) {
+            //     $jumlah_rc=0;
+            //     $jumlah_c=0;
+            //     if ($key->jenis==1){
+            //         $temp=$key->kode_m_dat;
+            //         $j=0;
+            //         foreach ($kegiatan as $key2) {
+            //             if ($key2->jenis==2 && $key2->induk==$temp){
+            //                 $jumlah_rc=$jumlah_rc+$data_program[$j]['jc'];
+            //                 $jumlah_c=$jumlah_c+$data_program[$j]['c'];
+            //             }
+            //             $j++;
+            //         }
+            //         $data_program_induk[$i]['jc']=$jumlah_rc;
+            //         $data_program_induk[$i++]['c']=$jumlah_c;
+            //     }else{
+            //         $data_program_induk[$i]['jc']=$jumlah_rc;
+            //         $data_program_induk[$i++]['c']=$jumlah_c;
+            //     }
+            // }
         }
         
         $this->load->library('pagination');
@@ -152,13 +225,17 @@ class Resume extends CI_Controller
             $data['data_jumlah_kegiatan'] = $data_jumlah_kegiatan;
         if (isset($data_suboutput))
             $data['data_suboutput'] = $data_suboutput;
+        if (isset($data_program_backup))
+            $data['data_program_induk'] = $data_program_backup;
         if (isset($data_program))
             $data['data_program'] = $data_program;
+        if (isset($data_subprogram))
+            $data['data_subprogram'] = $data_subprogram;
         if (isset($count_jumlah))
             $data['count_jumlah'] = $count_jumlah;
 
-        echo "<pre>"; print_r($komponen);echo"</pre>";
-        echo "<pre>"; print_r($data_jumlah);echo"</pre>";
+        // echo "<pre>"; print_r($data_program_backup);echo"</pre>";
+        // echo "<pre>"; print_r($kegiatan);echo"</pre>";
 
         $data['title'] = 'Resume';
         $data['subtitle'] = '';

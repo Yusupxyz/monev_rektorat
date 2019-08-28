@@ -64,12 +64,17 @@
             {
                 $jumlah = $data_jumlah_kegiatan[$i]->jumlah;
                 $jumlah_capaian = $data_jumlah_kegiatan[$i]->jc;
-                if ($kegiatan->jenis==1 || $kegiatan->jenis==2){
+                if ($kegiatan->jenis==1){
+                    if (isset($data_program[$i])){
+                        $jc = $data_program_induk[1]['jc']; 
+                        $c = $data_program_induk[1]['c']; 
+                    }
+                }elseif ($kegiatan->jenis==2) {
                     if (isset($data_program[$i])){
                         $jc = $data_program[$i]['jc']; 
                         $c = $data_program[$i]['c']; 
                     }
-                }elseif ($kegiatan->jenis==$i) {
+                } elseif ($kegiatan->jenis==3) {
                     if (isset($data_subprogram[$i])){
                         $jc = $data_subprogram[$i]['jc']; 
                         $c = $data_subprogram[$i]['c']; 

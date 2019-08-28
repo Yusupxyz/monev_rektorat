@@ -72,6 +72,8 @@ class Sub_komponen_model extends CI_Model
          return $this->db->get($this->table)->row();
      }
 
+     
+
     // get data by id_komponen
     function get_by_id_komponen($i,$b,$tahun)
     {
