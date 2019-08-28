@@ -192,14 +192,17 @@ class Komponen_model extends CI_Model
     }
 
      // get jumlah anak unit by id
-     function count_child_unit($i,$b)
-     {
-         $result=$this->db->query (
-             'SELECT count(*) as "jumlah_anak" FROM komponen 
-             LEFT join sub_komponen on komponen.id_komponen=sub_komponen.id_komponen 
-             WHERE komponen.kode_komponen=(SELECT kode_komponen from sub_komponen limit '.$i.',1)')->row();
-         return $result;
-     }
+     function count_child_unit($i)
+    {
+        $result=$this->db->query (
+            'SELECT count(*) as "jumlah_anak" FROM sub_komponen LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
+            LEFT JOIN kegiatan ON kegiatan.id_kegiatan=komponen.id_kegiatan
+            WHERE komponen.kode_komponen=(SELECT kode_komponen from komponen  
+            LEFT JOIN kegiatan ON kegiatan.id_kegiatan=komponen.id_kegiatan 
+            WHERE kegiatan.id_unit=0 ORDER BY kode_komponen  limit '.$i.',1)
+            AND kegiatan.id_unit!=0')->row();
+        return $result;
+    }
 
     // get jumlah anak dari unit by id
     function count_all_child($kode)
@@ -222,11 +225,28 @@ class Komponen_model extends CI_Model
         return $result;
     }
 
+    // count komponen
+    function count_kode_komponen($kode)
+    {
+        $result = $this->db->query('
+        select count(*) as count FROM komponen LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan 
+        WHERE kode_komponen='.$kode.' and kegiatan.id_unit!=0 ')->row();
+        return $result;
+    }
+
     // get data by id
     function count_id_suboutput($id)
     {
         $this->db->select('count(*) as jumlah');
         $this->db->where('id_kegiatan', $id);
+        return $this->db->get($this->table)->row();
+    }
+
+    // get id komponen by id subkomponen
+    function get_data_by_kode($kode)
+    {
+        $this->db->select('jumlah as jumlah, rencana_capaian as rc, capaian as c, jumlah_capaian as jc');
+        $this->db->where('id_komponen', $kode);
         return $this->db->get($this->table)->row();
     }
 

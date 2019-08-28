@@ -61,7 +61,9 @@ class Resume extends CI_Controller
 
         for ($i = 0; $i < $this->Komponen_model->count_komponen($b)->count; $i++) {
             $count_child_komponen[] = $this->Komponen_model->count_child_resume($i, $b);
-            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun);
+            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun,$b);
+            $count_child_komponen_unit[] =$this->Komponen_model->count_child_unit($i);
+            $subkomponenunit[] = $this->Sub_komponen_model->get_by_id_komponen_rektorat($i,$b,$this->tahun);
         }
 
         if (isset($kegiatan)){
@@ -73,7 +75,11 @@ class Resume extends CI_Controller
             for ($j=0; $j < count($komponen) ; $j++) { 
                     if (isset($komponen[$j][0])){ 
                         foreach ($komponen[$j] as $key => $value) { 
-                            $data_jumlah[$j][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+                            if ($this->Komponen_model->count_kode_komponen($value->kode_komponen)->count==0){
+                                $data_jumlah[$j][]=$this->Komponen_model->get_data_by_kode($value->id_komponen);
+                            }else{
+                                $data_jumlah[$j][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+                            }
                             $count_jumlah[$j][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
                             $jenis[$j][]=$data_jumlah_kegiatan[$j]->jenis;
                         }
@@ -107,12 +113,12 @@ class Resume extends CI_Controller
                 $data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
             }
 
-            // for ($i=0; $i < count($data_subprogram) ; $i++) {
-            //     $jumlah_rc=0;
-            //     $jumlah_c=0; 
-            //     $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
-            //     $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
-            // }
+            for ($i=0; $i < count($data_subprogram) ; $i++) {
+                $jumlah_rc=0;
+                $jumlah_c=0; 
+                $data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
+                $data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+            }
         }
         
         $this->load->library('pagination');
@@ -132,10 +138,14 @@ class Resume extends CI_Controller
             $data['count_child'] = $count_child;
         if (isset($count_child_komponen))
             $data['count_child_komponen'] = $count_child_komponen;
+        if (isset($count_child_komponen_unit))
+            $data['count_child_komponen_unit'] = $count_child_komponen_unit;
         if (isset($komponen))
             $data['komponen'] = $komponen;
         if (isset($subkomponen))
             $data['subkomponen'] = $subkomponen;
+        if (isset($subkomponenunit))
+            $data['subkomponenunit'] = $subkomponenunit;
         if (isset($data_jumlah))
             $data['data_komponen'] = $data_jumlah;
         if (isset($data_jumlah_kegiatan))
@@ -147,8 +157,8 @@ class Resume extends CI_Controller
         if (isset($count_jumlah))
             $data['count_jumlah'] = $count_jumlah;
 
-        echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
-        echo "<pre>"; print_r($subkomponen);echo"</pre>";
+        echo "<pre>"; print_r($komponen);echo"</pre>";
+        echo "<pre>"; print_r($data_jumlah);echo"</pre>";
 
         $data['title'] = 'Resume';
         $data['subtitle'] = '';

@@ -62,6 +62,7 @@ class Sub_komponen_model extends CI_Model
          $this->db->where('kode_komponen', $kode);
          return $this->db->get($this->table)->row();
      }
+     
      // get id komponen by id subkomponen
      function count_by_kode($kode)
      {
@@ -87,24 +88,38 @@ class Sub_komponen_model extends CI_Model
                 LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
                 unit ON unit.id_unit=kegiatan.id_unit WHERE sub_komponen.id_komponen = 
                     (select id_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_unit = '.$b.' AND kegiatan.id_tahun = '.$tahun.'
-                     ORDER BY kode_komponen limit '.$i.',1 )')->result();
+                     ORDER BY kode_komponen limit '.$i.',1 ) ')->result();
         }
         
         return $result;
     }
 
     // get data by id_komponen
-    function get_by_id_komponen_resume($i,$tahun)
+    function get_by_id_komponen_resume($i,$tahun,$id_unit)
     {
         $result=$this->db->query (
             'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON komponen.id_komponen=sub_komponen.id_komponen
             LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
             unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
-                (select kode_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_tahun = '.$tahun.'
-                 ORDER BY kegiatan.kode_m_dat  limit '.$i.',1) AND kegiatan.kode_m_dat=(select kegiatan.kode_m_dat from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_tahun = '.$tahun.'
-                 ORDER BY kegiatan.kode_m_dat  limit '.$i.',1)')->result();
+                (select kode_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_tahun = '.$tahun.' and kegiatan.id_unit='.$id_unit.'
+                 ORDER BY kegiatan.kode_m_dat  limit '.$i.',1) AND kegiatan.kode_m_dat=(select kegiatan.kode_m_dat from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_tahun = '.$tahun.' and kegiatan.id_unit='.$id_unit.'
+                 ORDER BY kegiatan.kode_m_dat  limit '.$i.',1) and kegiatan.id_unit='.$id_unit)->result();
         return $result;
     }
+
+    // get data by id_komponen
+    function get_by_id_komponen_rektorat($i,$tahun,$id_unit)
+    {
+        $result=$this->db->query (
+            'SELECT sub_komponen.*, unit.* FROM sub_komponen LEFT JOIN komponen ON komponen.id_komponen=sub_komponen.id_komponen
+            LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
+            unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.kode_komponen = 
+                (SELECT kode_komponen from komponen  
+            LEFT JOIN kegiatan ON kegiatan.id_kegiatan=komponen.id_kegiatan 
+            WHERE kegiatan.id_unit=0 ORDER BY kode_komponen  limit '.$i.',1) AND kegiatan.id_unit!=0')->result();
+        return $result;
+    }
+            
 
     // sum data by id subkomponen
     function sum_by_idkomponen($id)

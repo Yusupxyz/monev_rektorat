@@ -153,7 +153,30 @@
                         
                    <?php
                         }}                        
-                    }                 
+                    }      
+                    
+                    if($count_child_komponen_unit[$j]->jumlah_anak !='0'){
+                        if (isset($subkomponenunit[$j][0])){ 
+                            foreach ($subkomponenunit[$j] as $key => $value2) { 
+                            $jumlah1 = $value2->jumlah; 
+                            $jumlah_capaian1 = $value2->jumlah_capaian;
+                            ?>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><?php echo $value2->kode_subkomponen; ?></td>
+                            <td><?php echo $value2->uraian_kegiatan; ?></td>
+                            <td><?php echo "Rp.".nominal($jumlah1).""; ?></td>
+                            <td><?php echo round($value2->rencana_capaian)."%" ?></td>
+                            <td><?php echo round($value2->capaian)."%" ?></td>
+                            <td><?php echo "Rp.".nominal($jumlah_capaian1).""; ?></td>
+                            <td><?php echo $value2->deskripsi ?></td>
+    
+                        </tr> 
+                        
+                   <?php
+                        }}                        
+                    }  
                     }
                     $j++;
                 }

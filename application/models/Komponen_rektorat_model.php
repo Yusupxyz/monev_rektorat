@@ -35,7 +35,7 @@ class Komponen_rektorat_model extends CI_Model
     }
 
     // get jumlah anak unit by id
-    function count_child_unit($i,$b)
+    function count_child_unit($i)
     {
         $result=$this->db->query (
             'SELECT count(*) as "jumlah_anak" FROM komponen_rektorat 
