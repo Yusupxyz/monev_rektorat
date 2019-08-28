@@ -60,7 +60,7 @@ class Resume extends CI_Controller
         }
 
         for ($i = 0; $i < $this->Komponen_model->count_komponen($b)->count; $i++) {
-            $count_child_komponen[] = $this->Komponen_model->count_child($i, $b);
+            $count_child_komponen[] = $this->Komponen_model->count_child_resume($i, $b);
             $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun);
         }
 
@@ -147,7 +147,9 @@ class Resume extends CI_Controller
         if (isset($count_jumlah))
             $data['count_jumlah'] = $count_jumlah;
 
-        echo "<pre>"; print_r($data_subprogram);echo"</pre>";
+        echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
+        echo "<pre>"; print_r($subkomponen);echo"</pre>";
+
         $data['title'] = 'Resume';
         $data['subtitle'] = '';
         $data['crumb'] = [

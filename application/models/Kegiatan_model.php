@@ -159,6 +159,16 @@ class Kegiatan_model extends CI_Model
         return $this->db->get($this->table)->row();
     }
 
+    // sum_by_jenis_unit
+    function get_id_kegiatan_byunitjenis($id_unit,$jenis)
+    {
+        $this->db->select('*');
+        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode', 'left');
+        $this->db->where('jenis', '3');
+        $this->db->where('id_unit', $id_unit);
+        return $this->db->get($this->table)->row();
+    }
+
     // get jumlah anak by id
     function count_child($i, $b, $tahun)
     {

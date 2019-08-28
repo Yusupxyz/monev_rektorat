@@ -172,8 +172,21 @@ class Komponen_model extends CI_Model
     {
         $result = $this->db->query(
             'Select count(*) as "jumlah_anak" FROM sub_komponen LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
-            WHERE komponen.kode_komponen=(SELECT kode_komponen from komponen LEFT JOIN kegiatan ON 
-            kegiatan.id_kegiatan=komponen.id_kegiatan WHERE id_unit='.$b.' ORDER BY kode_komponen limit ' . $i . ',1)'
+            LEFT JOIN kegiatan ON kegiatan.id_kegiatan=komponen.id_kegiatan WHERE id_unit='.$b.' and
+            komponen.kode_komponen=(SELECT kode_komponen from komponen LEFT JOIN kegiatan ON 
+            kegiatan.id_kegiatan=komponen.id_kegiatan WHERE id_unit='.$b.' ORDER BY komponen.kode_komponen limit ' . $i . ',1)'
+        )->row();
+        return $result;
+    }
+
+    // get jumlah anak by id
+    function count_child_resume($i, $b)
+    {
+        $result = $this->db->query(
+            'Select count(*) as "jumlah_anak" FROM sub_komponen LEFT join komponen on komponen.id_komponen=sub_komponen.id_komponen 
+            LEFT JOIN kegiatan ON kegiatan.id_kegiatan=komponen.id_kegiatan WHERE 
+            komponen.kode_komponen=(SELECT kode_komponen from komponen LEFT JOIN kegiatan ON 
+            kegiatan.id_kegiatan=komponen.id_kegiatan WHERE id_unit='.$b.' ORDER BY komponen.kode_komponen limit ' . $i . ',1)'
         )->row();
         return $result;
     }
