@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Aug 28, 2019 at 06:23 AM
+-- Generation Time: Aug 28, 2019 at 05:16 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.3.0
 
@@ -151,19 +151,19 @@ CREATE TABLE `kegiatan` (
 --
 
 INSERT INTO `kegiatan` (`id_kegiatan`, `kode_m_dat`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`, `id_unit`, `id_tahun`) VALUES
-(85, '042.01.01', '-', '-', 3507278000, 0, 0, 0, 0, 1),
-(86, '2642', '-', '-', 3507278000, 0, 0, 0, 0, 1),
+(85, '042.01.01', '-', '-', 3016332003, 0, 0, 0, 0, 1),
+(86, '2642', '-', '-', 3016332000, 0, 0, 0, 0, 1),
 (87, '2642.001', '-', '-', 1184900000, 0, 0, 0, 0, 1),
 (88, '2642.001.001', '-', '-', 1184900000, 0, 0, 0, 0, 1),
-(90, '5742.001', '-', '-', 1100000000, 0, 0, 0, 0, 1),
-(92, '5742.001.002', '-', '-', 1100000000, 0, 0, 0, 0, 1),
+(90, '5742.001', '-', '-', 3, 0, 0, 0, 0, 1),
+(92, '5742.001.002', '-', '-', 3, 0, 0, 0, 0, 1),
 (93, '042.01.01', '-', '-', 361121000, 3, 1, 6000000, 16, 1),
 (94, '5742', '-', '-', 361121000, 3, 1, 6000000, 16, 1),
 (95, '5742.001', '-', '-', 361121000, 3, 1, 6000000, 16, 1),
 (96, '5742.001.002', 'Layanan Pendidikan Program Sarjana', '-', 361121000, 3, 1, 6000000, 16, 1),
-(97, '2642.002', '-', '-', 1222378000, 0, 0, 0, 0, 1),
+(97, '2642.002', '-', '-', 1831432000, 0, 0, 0, 0, 1),
 (98, '2642.002.001', '-', '-', 1222378000, 0, 0, 0, 0, 1),
-(99, '2642.002.002', '-', '-', 0, 0, 0, 0, 0, 1);
+(99, '2642.002.002', '-', '-', 609054000, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -189,8 +189,8 @@ CREATE TABLE `komponen` (
 --
 
 INSERT INTO `komponen` (`id_komponen`, `id_kegiatan`, `kode_komponen`, `uraian_kegiatan`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`) VALUES
-(27, 92, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 1100000000, 0, 0, 0),
-(28, 92, '052', 'Proses Belajar Mengajar', '-', '-', 0, 0, 0, 0),
+(27, 92, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 2, 0, 0, 0),
+(28, 92, '052', 'Proses Belajar Mengajar', '-', '-', 1, 0, 0, 0),
 (29, 92, '053', 'Wisuda dan Yudisium', '-', '-', 0, 0, 0, 0),
 (30, 96, '051', 'Penerimaan Mahasiswa Baru', '-', '-', 20000000, 5, 1, 5000000),
 (31, 96, '052', 'Proses Belajar Mengajar', '-', '-', 326925000, 5, 1, 1000000),
@@ -198,7 +198,7 @@ INSERT INTO `komponen` (`id_komponen`, `id_kegiatan`, `kode_komponen`, `uraian_k
 (33, 96, '053', 'Wisuda dan Yudisium', '-', '-', 0, 0, 0, 0),
 (34, 88, '004', 'Dukungan Operasional Penyelenggaraan Pendidikan', '-', '-', 1184900000, 0, 0, 0),
 (35, 98, '004', 'Dukungan Operasional Penyelenggaraan Pendidikan', '-', '-', 1222378000, 0, 0, 0),
-(37, 99, '004', 'Dukungan Operasional Penyelenggaraan Pendidikan', '-', '-', 0, 0, 0, 0);
+(37, 99, '004', 'Dukungan Operasional Penyelenggaraan Pendidikan', '-', '-', 609054000, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -294,7 +294,7 @@ INSERT INTO `m_dat` (`kode`, `ket`, `induk`, `jenis`) VALUES
 ('2642.001.001', 'Operasional dan Pemeliharaan Perkantoran', '2642.001', 4),
 ('2642.002', 'Layanan Pembelajaran\r\n[Base Line]', '2642', 3),
 ('2642.002.001', 'Proses Belajar Mengajar', '2642.002', 4),
-('2642.002.002', 'Wisuda dan Yudisium', '2642.003', 4),
+('2642.002.002', 'Wisuda dan Yudisium', '2642.002', 4),
 ('2642.004', 'Laporan Kegiatan Mahasiswa\r\n[Base Line]', '2642', 3),
 ('2642.004.001', 'Unit Kegiatan Mahasiswa dan Organisasi Kemahasiswaan', '2642.004', 4),
 ('2642.004.002', 'Kegiatan Kemahasiswaan', '2642.004', 4),
@@ -342,18 +342,6 @@ CREATE TABLE `realisasi` (
 --
 
 INSERT INTO `realisasi` (`id_realisasi`, `id_bulan`, `id_subkomponen`, `id_unit`, `rencana_capaian`, `ukuran_keberhasilan`, `realisasi_capaian`, `realisasi_jumlah`, `uraian_hasil`, `kendala`, `keterangan`) VALUES
-(61, 1, 55, 0, 5, '-', 1, 0, '-', '-', '-'),
-(62, 2, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(63, 3, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(64, 4, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(65, 5, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(66, 6, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(67, 7, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(68, 8, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(69, 9, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(70, 10, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(71, 11, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
-(72, 12, 55, 0, 0, '-', 0, 0, '-', '-', '-'),
 (73, 1, 56, 16, 5, '-', 1, 5000000, '-', '-', '-'),
 (74, 2, 56, 16, 0, '-', 0, 0, '-', '-', '-'),
 (75, 3, 56, 16, 0, '-', 0, 0, '-', '-', '-'),
@@ -425,7 +413,43 @@ INSERT INTO `realisasi` (`id_realisasi`, `id_bulan`, `id_subkomponen`, `id_unit`
 (249, 9, 184, 0, 0, '-', 0, 0, '-', '-', '-'),
 (250, 10, 184, 0, 0, '-', 0, 0, '-', '-', '-'),
 (251, 11, 184, 0, 0, '-', 0, 0, '-', '-', '-'),
-(252, 12, 184, 0, 0, '-', 0, 0, '-', '-', '-');
+(252, 12, 184, 0, 0, '-', 0, 0, '-', '-', '-'),
+(289, 1, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(290, 2, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(291, 3, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(292, 4, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(293, 5, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(294, 6, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(295, 7, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(296, 8, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(297, 9, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(298, 10, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(299, 11, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(300, 12, 191, 0, 0, '-', 0, 0, '-', '-', '-'),
+(349, 1, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(350, 2, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(351, 3, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(352, 4, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(353, 5, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(354, 6, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(355, 7, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(356, 8, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(357, 9, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(358, 10, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(359, 11, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(360, 12, 211, 0, 0, '-', 0, 0, '-', '-', '-'),
+(361, 1, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(362, 2, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(363, 3, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(364, 4, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(365, 5, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(366, 6, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(367, 7, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(368, 8, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(369, 9, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(370, 10, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(371, 11, 212, 0, 0, '-', 0, 0, '-', '-', '-'),
+(372, 12, 212, 0, 0, '-', 0, 0, '-', '-', '-');
 
 -- --------------------------------------------------------
 
@@ -490,13 +514,15 @@ CREATE TABLE `sub_komponen` (
 --
 
 INSERT INTO `sub_komponen` (`id_subkomponen`, `id_komponen`, `kode_subkomponen`, `uraian_kegiatan`, `volume`, `satuan`, `jumlah`, `rencana_capaian`, `capaian`, `jumlah_capaian`) VALUES
-(55, 27, 'A', 'Perlengkapan Mahasiswa Baru', '-', '-', 1100000000, 2, 1, 0),
 (56, 30, 'DA', 'Pengenalan Kehidupan Kampus Bagi Mahasiswa Baru (PKKMB)', '-', '-', 20000000, 5, 1, 5000000),
 (57, 31, 'DA', 'Ujian Tengah dan Ujian Akhir Semester Fakultas Ekonomi dan Bisnis', '-', '-', 326925000, 5, 1, 1000000),
 (58, 32, 'DA', 'Penyusunan Buku Panduan Penulisan Proposal dan Skripsi Fakultas Ekonomi dan Bisnis', '-', '-', 3200000, 0, 0, 0),
 (59, 32, 'DB', 'Pembuatan Buku Profil Fakultas Ekonomi dan Bisnis', '-', '-', 10996000, 0, 0, 0),
 (127, 34, 'A', 'PERAWATAN SARANA GEDUNG', '-', '-', 1184900000, 0, 0, 0),
-(184, 35, 'A', 'Dukungan Operasional Penyelenggaraan Pendidikan', '-', '-', 1222378000, 0, 0, 0);
+(184, 35, 'A', 'Bahan Penunjang Pelaksanaan Pendidikan', '-', '-', 1222378000, 0, 0, 0),
+(191, 37, 'A', 'Wisuda (S1 dan S2) (Keperluan lainnya di PNBP)', '-', '-', 609054000, 0, 0, 0),
+(211, 27, 'sds', 'dsds', '-', '-', 2, 0, 0, 0),
+(212, 28, 'asa', 'asa', '-', '-', 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -593,7 +619,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `id_unit`, `foto`, `foto_nama`) VALUES
 (1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', 'm0vyKu2zW7L8PTG20bquF.707e055aeea8a30aca', 1541329145, 'XfERkEq7bkuTwbgQGlGLFe', 1268889823, 1566913269, 1, 'Admin', 'istratorr', 'ADMIN', '0', 0, '', ''),
 (2, '127.0.0.1', 'member', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'member@member.com', '', 'm0vyKu2zW7L8PTG20bquF.707e055aeea8a30aca', 1541329145, 'lHtbqmxsnla1izZ5LcXd9O', 1268889823, 1563305013, 1, 'Operator', 'Fisip', 'Prodi Fisip', '0', 18, '', ''),
-(5, '::1', 'rektorat@rektorat.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'rektorat@rektorat.com', NULL, NULL, NULL, 'oFOO1kuHokNrnFHMZTHP4u', 1562004896, 1566954131, 1, 'admin', 'rektorat', 'Rektorat', '12424', 0, '', ''),
+(5, '::1', 'rektorat@rektorat.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'rektorat@rektorat.com', NULL, NULL, NULL, 'oFOO1kuHokNrnFHMZTHP4u', 1562004896, 1566996253, 1, 'admin', 'rektorat', 'Rektorat', '12424', 0, '', ''),
 (6, '::1', 'ekonomi@ekonomi.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'ekonomi@ekonomi.com', NULL, NULL, NULL, 'dggqPO3Ak20f7bqgSeUeYe', 1562813018, 1566913238, 1, 'Operator', 'Ekonomi', 'Prodi Ekonomi', '12424', 16, '', ''),
 (7, '::1', 'fh@fh.com', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', NULL, 'fh@fh.com', NULL, NULL, NULL, NULL, 1562813184, NULL, 1, 'Operator', 'Hukum', 'Fakultas Hukum', '12345', 17, '', '');
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`, `id_unit`, `foto`, `foto_nama`) VALUES
@@ -785,7 +811,7 @@ ALTER TABLE `menu_type`
 -- AUTO_INCREMENT for table `realisasi`
 --
 ALTER TABLE `realisasi`
-  MODIFY `id_realisasi` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
+  MODIFY `id_realisasi` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=373;
 
 --
 -- AUTO_INCREMENT for table `setting_waktu`
@@ -803,7 +829,7 @@ ALTER TABLE `set_unit_chart`
 -- AUTO_INCREMENT for table `sub_komponen`
 --
 ALTER TABLE `sub_komponen`
-  MODIFY `id_subkomponen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `id_subkomponen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
 
 --
 -- AUTO_INCREMENT for table `tahun`
