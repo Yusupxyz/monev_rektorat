@@ -86,7 +86,7 @@
 			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
             <td style="text-align:center" width="200px">
                 <!-- create komponen -->
-                <?php if ($group_id==""){
+                <?php  if ($group_id==""){
                 if ($kegiatan->jenis!='1' && $kegiatan->jenis!='2'){
                     if($count_child[$i]->jumlah_anak=='0'){
                     echo anchor(site_url('kegiatan/create/'.$kegiatan->id_unit.'/komponen/'.$kegiatan->id_kegiatan),'<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-success"  data-toggle="tooltip" title="Tambah Komponen"'); 

@@ -79,7 +79,7 @@ class Sub_komponen_model extends CI_Model
             LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
             unit ON unit.id_unit=kegiatan.id_unit WHERE sub_komponen.id_komponen = 
                 (select id_komponen from komponen LEFT JOIN kegiatan on komponen.id_kegiatan = kegiatan.id_kegiatan where kegiatan.id_unit = '.$b.' AND kegiatan.id_tahun = '.$tahun.'
-                 ORDER BY kode_komponen limit '.$i.',1 )')->result();
+                 ORDER BY kegiatan.kode_m_dat limit '.$i.',1 )')->result();
         return $result;
     }
 

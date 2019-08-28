@@ -91,7 +91,7 @@ class Komponen_model extends CI_Model
         $result=$this->db->query (
             'SELECT komponen.*, unit.* FROM komponen LEFT JOIN kegiatan ON komponen.id_kegiatan=kegiatan.id_kegiatan LEFT JOIN
             unit ON unit.id_unit=kegiatan.id_unit WHERE komponen.id_kegiatan = 
-                     (select id_kegiatan from kegiatan where id_unit='.$b.' AND id_tahun='.$tahun.' limit '.$i.',1) ORDER By kode_komponen')->result();
+                     (select id_kegiatan from kegiatan where id_unit='.$b.' AND id_tahun='.$tahun.' ORDER BY kode_m_dat limit '.$i.',1) ORDER By kode_komponen')->result();
         return $result;
     }
 

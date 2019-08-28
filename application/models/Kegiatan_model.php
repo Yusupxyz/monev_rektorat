@@ -35,6 +35,17 @@ class Kegiatan_model extends CI_Model
         $this->db->where('id_kegiatan', $id);
         return $this->db->get($this->table4)->row();
     }
+
+    function get_by_id_unit($id,$tahun,$jenis)
+    {
+        $this->db->select('*, (SELECT count(*)FROM `kegiatan` JOIN `m_dat` ON `kegiatan`.`kode_m_dat`=`m_dat`.`kode` WHERE `id_unit` = '.$id.' AND `id_tahun` = '.$tahun.' AND `jenis` = '.$jenis.') as count');
+        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode');
+        $this->db->where('id_unit', $id);
+        $this->db->where('id_tahun', $tahun);
+        $this->db->where('jenis', $jenis);
+        return $this->db->get($this->table4)->result();
+    }
+
     function delete_kegiatan($id)
     {
         $this->db->where('id_kegiatan', $id);
@@ -81,12 +92,26 @@ class Kegiatan_model extends CI_Model
     }
 
     // get sum by jenis dan idunit
-    function sum($i, $id)
+    function sum($i, $id, $tahun, $induk)
     {
         $this->db->select('sum(jumlah) as sum');
         $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode', 'left');
         $this->db->where('id_unit', $id);
         $this->db->where('jenis', $i);
+        $this->db->where('id_tahun', $tahun);
+        $this->db->where('induk', $induk);
+        return $this->db->get($this->table)->row();
+    }
+
+    // get sum by jenis dan idunit
+    function sum_except($i, $id, $tahun, $induk)
+    {
+        $this->db->select('sum(jumlah) as sum');
+        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode', 'left');
+        $this->db->where('id_unit', $id);
+        $this->db->where('jenis', '3');
+        $this->db->where('id_tahun', $tahun);
+        // $this->db->where('induk', $induk);
         return $this->db->get($this->table)->row();
     }
 
@@ -139,7 +164,7 @@ class Kegiatan_model extends CI_Model
     {
         $result = $this->db->query('SELECT count(*) as jumlah_anak FROM kegiatan JOIN m_dat
                      ON kegiatan.kode_m_dat = m_dat.kode WHERE m_dat.induk = 
-                     (select kode_m_dat from kegiatan where id_tahun = ' . $tahun . ' AND id_unit=' . $b . ' limit ' . $i . ',1)')->row();
+                     (select kode_m_dat from kegiatan where id_tahun = ' . $tahun . ' AND id_unit=' . $b . ' ORDER BY kode_m_dat limit ' . $i . ',1)')->row();
         return $result;
     }
 
@@ -162,6 +187,7 @@ class Kegiatan_model extends CI_Model
         $this->db->where($this->id, $id);
         $this->db->update($this->table, $data);
     }
+
     // update data_komponen
     function update_komponen($id, $data)
     {
@@ -175,10 +201,11 @@ class Kegiatan_model extends CI_Model
         $this->db->where('id_subkomponen', $id);
         $this->db->update($this->table2, $data);
     }
+
     // update data by kode m_dat
-    function update_bykode($id, $data, $id_unit)
+    function update_bykode($kode, $data, $id_unit)
     {
-        $this->db->where('kode_m_dat', $id);
+        $this->db->where('kode_m_dat', $kode);
         $this->db->where('id_unit', $id_unit);
         $this->db->update($this->table, $data);
     }
@@ -225,10 +252,27 @@ class Kegiatan_model extends CI_Model
         }
     }
 
+    //check pk data is exists 
+
+    function is_exist_induk($induk,$id)
+    {
+        $this->db->where('kode_m_dat', $induk);
+        $this->db->where('id_unit', $id);
+        $query = $this->db->get($this->table);
+        // $query = $this->db->get_where($this->table, array($this->id => $id));
+        $count = $query->num_rows();
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // sum_by_jenis_unit
     function sum_jumlah($kode)
     {
-        $this->db->select(' sum(jumlah) as jumlah, sum(jumlah_capaian) as jc');
+        $this->db->select(' sum(jumlah) as jumlah, sum(jumlah_capaian) as jc, kode_m_dat, m_dat.jenis');
+        $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode','left');
         $this->db->where('kode_m_dat', $kode);
         return $this->db->get($this->table)->row();
     }

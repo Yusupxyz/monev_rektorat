@@ -16,8 +16,7 @@
 
                     <div class="form-group">
                         <label for="varchar">Kode Sub Komponen <?php echo form_error('kode_subkomponen') ?></label>
-                        <input type="text" class="form-control" name="kode_subkomponen" id="kode_subkomponen" placeholder="kode_subkomponen Komponen" value="<?php //echo $kode_subkomponen; 
-                                                                                                                                                                ?>" />
+                        <input type="text" class="form-control" name="kode_subkomponen" id="kode_subkomponen" placeholder="kode_subkomponen Komponen" value="<?php //echo $kode_subkomponen;                                                                                                                           ?>" />
                     </div>
                     <div class="form-group">
                         <label for="varchar">Uraian Kegiatan <?php echo form_error('uraian_kegiatan') ?></label>

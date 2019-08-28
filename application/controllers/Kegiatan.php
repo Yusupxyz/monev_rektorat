@@ -64,7 +64,7 @@ class Kegiatan extends CI_Controller
             $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i, $b, $this->tahun);
         }
 
-        // echo "<pre>"; print_r($count_child_komponen);echo"</pre>";
+        // echo "<pre>"; print_r($count_child);echo"</pre>";
         // echo "<pre>"; print_r($subkomponen);echo"</pre>";
         $this->load->library('pagination');
         $this->pagination->initialize($config);
@@ -272,11 +272,28 @@ class Kegiatan extends CI_Controller
 
                 //update kegiatan
                 for ($i = 4; $i > 1; $i--) {
-                    $sum = array(
-                        'jumlah' => $this->Kegiatan_model->sum($i, $id_unit)->sum
-                    );
-                    $id_kegiatan = $this->Kegiatan_model->get_id_kegiatan($i - 1, $id_unit)->id_kegiatan;
-                    $this->Kegiatan_model->update($id_kegiatan, $sum);
+                    $id_kegiatan_2 = $this->Kegiatan_model->get_by_id_unit($id_unit,$this->tahun,$i);
+                    foreach ($id_kegiatan_2 as $key => $value) {
+                        if (isset($temp) && $temp[0]!=0){
+                            $sum = array(
+                                'jumlah' => $this->Kegiatan_model->sum($i, $id_unit ,$this->tahun,$value->induk)->sum+$temp[0]
+                            );
+                        }else{
+                            $sum = array(
+                                'jumlah' => $this->Kegiatan_model->sum($i, $id_unit ,$this->tahun,$value->induk)->sum
+                            );
+                        }
+                        
+                        if (!$this->Kegiatan_model->is_exist_induk($value->induk,$id_unit)){
+                            $temp[0]=$sum['jumlah'];
+                        }else{
+                            $temp[0]=0;
+                        }
+                        // if (isset($temp))
+                        // echo "<pre>"; print_r($sum);echo"</pre>";
+                        $this->Kegiatan_model->update_bykode($value->induk, $sum, $id_unit);
+                    }
+                    $count=count($id_kegiatan_2);
                 }
 
                 //insert realiasi dari subkomponen
@@ -337,12 +354,30 @@ class Kegiatan extends CI_Controller
 
             //update kegiatan
             for ($i = 4; $i > 1; $i--) {
-                $sum = array(
-                    'jumlah' => $this->Kegiatan_model->sum($i, $id_unit)->sum
-                );
-                $id_kegiatan = $this->Kegiatan_model->get_id_kegiatan($i - 1, $id_unit)->id_kegiatan;
-                $this->Kegiatan_model->update($id_kegiatan, $sum);
+                $id_kegiatan_2 = $this->Kegiatan_model->get_by_id_unit($id_unit,$this->tahun,$i);
+                foreach ($id_kegiatan_2 as $key => $value) {
+                    if (isset($temp) && $temp[0]!=0){
+                        $sum = array(
+                            'jumlah' => $this->Kegiatan_model->sum($i, $id_unit ,$this->tahun,$value->induk)->sum+$temp[0]
+                        );
+                    }else{
+                        $sum = array(
+                            'jumlah' => $this->Kegiatan_model->sum($i, $id_unit ,$this->tahun,$value->induk)->sum
+                        );
+                    }
+                    
+                    if (!$this->Kegiatan_model->is_exist_induk($value->induk,$id_unit)){
+                        $temp[0]=$sum['jumlah'];
+                    }else{
+                        $temp[0]=0;
+                    }
+                    // if (isset($temp))
+                    // echo "<pre>"; print_r($sum);echo"</pre>";
+                    $this->Kegiatan_model->update_bykode($value->induk, $sum, $id_unit);
+                }
+                $count=count($id_kegiatan_2);
             }
+
             redirect(site_url('kegiatan/' . $id_unit));
             // redirect(site_url('sub_komponen'));
         } else {
@@ -580,12 +615,30 @@ class Kegiatan extends CI_Controller
 
             //update kegiatan
             for ($i = 4; $i > 1; $i--) {
-                $sum = array(
-                    'jumlah' => $this->Kegiatan_model->sum($i, $this->input->post('id_unit'))->sum
-                );
-                $id_kegiatan = $this->Kegiatan_model->get_id_kegiatan($i - 1, $this->input->post('id_unit'))->id_kegiatan;
-                $this->Kegiatan_model->update($id_kegiatan, $sum);
-            }
+                    $id_kegiatan_2 = $this->Kegiatan_model->get_by_id_unit($this->input->post('id_unit'),$this->tahun,$i);
+                    foreach ($id_kegiatan_2 as $key => $value) {
+                        if (isset($temp) && $temp[0]!=0){
+                            $sum = array(
+                                'jumlah' => $this->Kegiatan_model->sum($i, $this->input->post('id_unit') ,$this->tahun,$value->induk)->sum+$temp[0]
+                            );
+                        }else{
+                            $sum = array(
+                                'jumlah' => $this->Kegiatan_model->sum($i, $this->input->post('id_unit') ,$this->tahun,$value->induk)->sum
+                            );
+                        }
+                        
+                        if (!$this->Kegiatan_model->is_exist_induk($value->induk,$this->input->post('id_unit'))){
+                            $temp[0]=$sum['jumlah'];
+                        }else{
+                            $temp[0]=0;
+                        }
+                        // if (isset($temp))
+                        // echo "<pre>"; print_r($sum);echo"</pre>";
+                        $this->Kegiatan_model->update_bykode($value->induk, $sum, $this->input->post('id_unit'));
+                    }
+                    $count=count($id_kegiatan_2);
+                }
+
             redirect(site_url('kegiatan/' . $this->input->post('id_unit', TRUE)));
         }
     }
