@@ -62,14 +62,14 @@ document.getElementById('keterangan').appendChild(div);
 
 div2.className = 'row';
 
-div.innerHTML = `<?php $j=0;
+div2.innerHTML = `<?php $j=0;
  foreach ($labels2 as $key => $value2){
   echo '    <h6>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" id="k1" style="background-color: '.$color[$j].';" class="btn"></button> 
   '.$labels2[$j++].'&nbsp;&nbsp;&nbsp;&nbsp;</h6>';
 } ?>
 `;
 
-document.getElementById('keterangan2').appendChild(div);
+document.getElementById('keterangan2').appendChild(div2);
 
 
 });
