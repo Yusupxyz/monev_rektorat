@@ -25,7 +25,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Serapan Pagu</span>
-              <span class="info-box-number">Rp <?= isset($total_serapan_dana) ?  nominal($total_pagu) : '0' ?></span>
+              <span class="info-box-number">Rp <?= isset($total_serapan_dana) ?  nominal($total_serapan_dana) : '0' ?></span>
 
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>

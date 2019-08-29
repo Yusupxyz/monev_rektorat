@@ -207,7 +207,7 @@ class Dashboard extends CI_Controller {
 								,"#008080","#008080","#e6beff","#e6beff","#9a6324","#9a6324");
 			if (isset($dataset))
 			$data['dataset']=$dataset;
-			// print("<pre>".print_r($data['dataset'],true)."</pre>");
+			print("<pre>".print_r($data['label'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya Kementerian Riset, Teknologi dan Pendidikan Tinggi '.$this->tahun;
 		}
