@@ -62,6 +62,7 @@ class Dashboard extends CI_Controller {
 								,"#911eb4","#911eb4","#46f0f0","#46f0f0","#f032e6","#f032e6","#bcf60c","#bcf60c","#fabebe","#fabebe"
 								,"#008080","#008080","#e6beff","#e6beff","#9a6324","#9a6324");
 			$data['dataset']=$dataset;
+			// print("<pre>".print_r($data['labels'],true)."</pre>");
 			// print("<pre>".print_r($data['dataset'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Tahun '.$this->tahun;
@@ -192,9 +193,12 @@ class Dashboard extends CI_Controller {
 			$data['options']=$this->Unit_model->get_all2();
 			$data['attribute']='id="unit" class="form-control select2"';
 			$data['selected']=$id_unit_unit;
+			$data['total_pagu_unit']=$this->Kegiatan_model->sum_by_jenis_unit($id_unit_unit)->jumlah;
+			$data['total_serapan_dana_unit'] = $this->Kegiatan_model->sum_by_jenis_unit($id_unit_unit)->jumlah_capaian;
+			$data['total_realisasi_capaian_unit']=$this->Kegiatan_model->sum_by_jenis_unit($id_unit_unit)->capaian;
+			$data['total_rencana_capaian_unit']=$this->Kegiatan_model->sum_by_jenis_unit($id_unit_unit)->rencana_capaian;
 			$data['label']=$this->Komponen_model->get_id_komponen('0');
 			$i=0;
-
 			foreach ($data['label'] as $key => $value) {
 				$data['labels'][]='Rencana "'.$value->uraian_kegiatan.' ('.$value->kode_komponen.')"';
 				$data['labels'][]='Realisasi "'.$value->uraian_kegiatan.' ('.$value->kode_komponen.')"';
@@ -233,7 +237,7 @@ class Dashboard extends CI_Controller {
 			if (isset($dataset2))
 			$data['dataset2']=$dataset2;
 
-			print("<pre>".print_r($data_program,true)."</pre>");
+			// print("<pre>".print_r($data['label2'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Rektorat '.$this->tahun;
 			$data['title2'] = 'Realisasi Capaian Unit '.$this->tahun;

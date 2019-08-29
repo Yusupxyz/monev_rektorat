@@ -139,6 +139,7 @@
             <div class="box-header with-border">
               <h3 class="box-title"><?php echo $title2 ?></h3>
               <br><br>
+              
               <div class="panel panel-default" style="display:inline-block;">
                 <div class="panel-heading post-thumb">
                   Unit :
@@ -147,6 +148,7 @@
                     <?php echo form_dropdown('unit', $options, $selected, $attribute); ?>
                   </div>
               </div>
+              
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                         title="Collapse">
@@ -156,20 +158,107 @@
               </div>
             </div>
 
+            <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box bg-aqua">
+            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Pagu</span>
+              <span class="info-box-number">Rp <?= isset($total_pagu_unit) ?  nominal($total_pagu_unit) : '0' ?></span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+                  <span class="progress-description">
+                    Total Rupiah
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Serapan Pagu</span>
+              <span class="info-box-number">Rp <?= isset($total_serapan_dana_unit) ?  nominal($total_serapan_dana_unit) : '0' ?></span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+                  <span class="progress-description">
+                    Total Rupiah
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="fa fa-cubes"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Rencana Capaian</span>
+              <span class="info-box-number"><?= isset($total_realisasi_capaian_unit) ?  $total_realisasi_capaian_unit : '0' ?> %</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+                  <span class="progress-description">
+                    Total Persentase
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box bg-red">
+            <span class="info-box-icon"><i class="fa fa-cubes"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Realisasi Capaian Fisik</span>
+              <span class="info-box-number"><?= isset($total_rencana_capaian_unit) ?  $total_rencana_capaian_unit : '0' ?> %</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+                  <span class="progress-description">
+                    Total Persentase
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+
+
             <div class="box-body" style="min-height: 150px">
               <div class="chart">
                 <canvas id="barChart2" style="height:270px"></canvas>
               </div>
             </div>
+
             <div style="padding-left: 10px;">
             <div class="panel panel-default" style="display:inline-block;">
                 <div class="panel-heading post-thumb">
                   Keterangan Komponen:
                 </div>
-                  <div class="panel-body post-body" id="keterangan" >
+                  <div class="panel-body post-body" id="keterangan2" >
                   </div>
               </div>
-              </div>
+            </div>
+              
+              
+
             <!-- /.box-body -->
             <div class="box-footer">
             </div>
