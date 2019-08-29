@@ -66,7 +66,11 @@ function removeRow(input) {
 }
 
   $(function(){
-    <?php if (isset($dataset)) { ?>
+    <?php if (isset($dataset)) {
+      
+      // print("<pre>".print_r($labels,true)."</pre>");
+			// print("<pre>".print_r($dataset,true)."</pre>");?>
+     
     var areaChartData = {
       labels  : ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
       datasets: [

@@ -95,8 +95,8 @@ class Resume extends CI_Controller
                 $jumlah_c=0;
                 if ($data_jumlah[$i]!=null){
                     for ($j=0; $j < count($data_jumlah[$i]) ; $j++) { 
-                        $jumlah_rc=$jumlah_rc+$data_jumlah[$i][$j]->rc;
-                        $jumlah_c=$jumlah_c+$data_jumlah[$i][$j]->c;
+                        $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$j]->rc/$count_jumlah[$i][$j]->jumlah);
+                        $jumlah_c=$jumlah_c+round($data_jumlah[$i][$j]->c/$count_jumlah[$i][$j]->jumlah);
                     }
                      $jumlah_rc=round($jumlah_rc/count($data_jumlah[$i]));
                      $jumlah_c=round($jumlah_c/count($data_jumlah[$i]));
@@ -170,28 +170,6 @@ class Resume extends CI_Controller
                     $data_program_backup[$i++]['c']=$jumlah_c;
                 }
             }
-
-            // $i=0;
-            // foreach ($kegiatan as $key ) {
-            //     $jumlah_rc=0;
-            //     $jumlah_c=0;
-            //     if ($key->jenis==1){
-            //         $temp=$key->kode_m_dat;
-            //         $j=0;
-            //         foreach ($kegiatan as $key2) {
-            //             if ($key2->jenis==2 && $key2->induk==$temp){
-            //                 $jumlah_rc=$jumlah_rc+$data_program[$j]['jc'];
-            //                 $jumlah_c=$jumlah_c+$data_program[$j]['c'];
-            //             }
-            //             $j++;
-            //         }
-            //         $data_program_induk[$i]['jc']=$jumlah_rc;
-            //         $data_program_induk[$i++]['c']=$jumlah_c;
-            //     }else{
-            //         $data_program_induk[$i]['jc']=$jumlah_rc;
-            //         $data_program_induk[$i++]['c']=$jumlah_c;
-            //     }
-            // }
         }
         
         $this->load->library('pagination');
@@ -234,8 +212,8 @@ class Resume extends CI_Controller
         if (isset($count_jumlah))
             $data['count_jumlah'] = $count_jumlah;
 
-        // echo "<pre>"; print_r($data_program_backup);echo"</pre>";
-        // echo "<pre>"; print_r($kegiatan);echo"</pre>";
+        // echo "<pre>"; print_r($data_jumlah);echo"</pre>";
+        // echo "<pre>"; print_r($count_jumlah);echo"</pre>";
 
         $data['title'] = 'Resume';
         $data['subtitle'] = '';
