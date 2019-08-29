@@ -83,11 +83,12 @@ class Kegiatan_model extends CI_Model
 
 
     // sum data by id kegiatan
-    function sum_by_induk($id)
+    function sum_by_induk($id,$id_unit)
     {
         $this->db->select('sum(capaian) as sum_realisasi, sum(rencana_capaian) as sum_rencana, sum(jumlah_capaian) as sum_jumlah');
         $this->db->join('m_dat', 'kegiatan.kode_m_dat=m_dat.kode');
         $this->db->where('induk', $id);
+        $this->db->where('id_unit', $id_unit);
         return $this->db->get($this->table)->row();
     }
 

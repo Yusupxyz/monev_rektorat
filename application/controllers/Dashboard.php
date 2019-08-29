@@ -67,55 +67,115 @@ class Dashboard extends CI_Controller {
 			$data['title'] = 'Realisasi Capaian Tahun '.$this->tahun;
 		}elseif ($this->group_id=='5'){
 			$kegiatan = $this->Kegiatan_model->get_data($this->user->id_unit, $this->id_tahun);
-
 			for ($i = 0; $i < $this->Kegiatan_model->count_kegiatan($this->user->id_unit, $this->id_tahun)->count; $i++) {
 				$count_child[] = $this->Kegiatan_model->count_child($i, $this->user->id_unit, $this->id_tahun);
 				$komponen[] = $this->Komponen_model->get_by_id_kegiatan($i, $this->user->id_unit, $this->id_tahun);
 			}
-
+	
 			if (isset($kegiatan)){
 				foreach ($kegiatan as $key ) { 
 					$data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
 				}
 			}
-	
+
 			if (isset($komponen)){
-				for ($i=0; $i < count($komponen) ; $i++) { 
-					if (isset($komponen[$i][0])){ 
-						foreach ($komponen[$i] as $key => $value) { 
-							$data_jumlah[$i][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
-							$count_jumlah[$i][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+				for ($j=0; $j < count($komponen) ; $j++) { 
+						if (isset($komponen[$j][0])){ 
+							foreach ($komponen[$j] as $key => $value) { 
+								if ($this->Komponen_model->count_kode_komponen($value->kode_komponen)->count==0){
+									$data_jumlah[$j][]=$this->Komponen_model->get_data_by_kode($value->id_komponen);
+								}else{
+									$data_jumlah[$j][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+								}
+								$count_jumlah[$j][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+								$jenis[$j][]=$data_jumlah_kegiatan[$j]->jenis;
+							}
+						}else{
+							$data_jumlah[$j]='';
+							$count_jumlah[$j]='';
+							$jenis[$j][]='';
 						}
-					}else{
-						$data_jumlah[$i]='';
-						$count_jumlah[$i]='';
 					}
-				}
-		
-				$v=0;
-				for ($i=0; $i < count($data_jumlah) ; $i++) {
+				
+				for ($i=0; $i < count($data_jumlah) ; $i++) { 
 					$jumlah_rc=0;
-					$jumlah_c=0; 
-					if (isset($data_jumlah[$i][0])){ 
-						$jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
-						$jumlah_c=$jumlah_c+round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v]->jumlah);
+					$jumlah_c=0;
+					if ($data_jumlah[$i]!=null){
+						for ($j=0; $j < count($data_jumlah[$i]) ; $j++) { 
+							$jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$j]->rc/$count_jumlah[$i][$j]->jumlah);
+							$jumlah_c=$jumlah_c+round($data_jumlah[$i][$j]->c/$count_jumlah[$i][$j]->jumlah);
+						}
+						 $jumlah_rc=round($jumlah_rc/count($data_jumlah[$i]));
+						 $jumlah_c=round($jumlah_c/count($data_jumlah[$i]));
 					}
 					$data_suboutput[$i]['jc']=$jumlah_rc;
 					$data_suboutput[$i]['c']=$jumlah_c;
 				}
 				
-				for ($i=0; $i < count($data_suboutput) ; $i++) {
+				$i=0;
+				foreach ($kegiatan as $key ) {
 					$jumlah_rc=0;
-					$jumlah_c=0; 
-					$data_subprogram[$i]['jc']=$jumlah_rc+$data_suboutput[$i]['jc'];
-					$data_subprogram[$i]['c']=$jumlah_c+$data_suboutput[$i]['c'];
+					$jumlah_c=0;
+					if ($key->jenis==3){
+						$temp=$key->kode_m_dat;
+						$j=0;
+						foreach ($kegiatan as $key2) {
+							if ($key2->jenis==4 && $key2->induk==$temp){
+								$jumlah_rc=$jumlah_rc+$data_suboutput[$j]['jc'];
+								$jumlah_c=$jumlah_c+$data_suboutput[$j]['c'];
+							}
+							$j++;
+						}
+						$data_subprogram[$i]['jc']=$jumlah_rc;
+						$data_subprogram[$i++]['c']=$jumlah_c;
+					}else{
+						$data_subprogram[$i]['jc']=$jumlah_rc;
+						$data_subprogram[$i++]['c']=$jumlah_c;
+					}
 				}
-		
-				for ($i=0; $i < count($data_subprogram) ; $i++) {
+	
+				$i=0;
+				foreach ($kegiatan as $key ) {
 					$jumlah_rc=0;
-					$jumlah_c=0; 
-					$data_program[$i]['jc']=$jumlah_rc+$data_subprogram[$i]['jc'];
-					$data_program[$i]['c']=$jumlah_c+$data_subprogram[$i]['c'];
+					$jumlah_c=0;
+					if ($key->jenis==2){
+						$temp=$key->kode_m_dat;
+						$j=0;
+						foreach ($kegiatan as $key2) {
+							if ($key2->jenis==3 && $key2->induk==$temp){
+								$jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+								$jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+							}
+							$j++;
+						}
+						$data_program[$i]['jc']=$jumlah_rc;
+						$data_program[$i++]['c']=$jumlah_c;
+					}else{
+						$data_program[$i]['jc']=$jumlah_rc;
+						$data_program[$i++]['c']=$jumlah_c;
+					}
+				}
+	
+				$i=0;
+				foreach ($kegiatan as $key ) {
+					$jumlah_rc=0;
+					$jumlah_c=0;
+					if ($key->jenis==2){
+						$temp=$key->kode_m_dat;
+						$j=0;
+						foreach ($kegiatan as $key2) {
+							if ($key2->jenis==3){
+								$jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+								$jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+							}
+							$j++;
+						}
+						$data_program_backup[$i]['jc']=$jumlah_rc;
+						$data_program_backup[$i++]['c']=$jumlah_c;
+					}else{
+						$data_program_backup[$i]['jc']=$jumlah_rc;
+						$data_program_backup[$i++]['c']=$jumlah_c;
+					}
 				}
 			}
 			
@@ -124,8 +184,8 @@ class Dashboard extends CI_Controller {
 				$data['total_serapan_dana'] = $data_jumlah_kegiatan[0]->jc;
 			}
 			if(isset($data_program)){
-				$data['total_realisasi_capaian']=$data_program[3]['jc'];
-				$data['total_rencana_capaian']=$data_program[3]['c'];
+				$data['total_realisasi_capaian']=$data_program_backup[1]['jc'];
+				$data['total_rencana_capaian']=$data_program_backup[1]['c'];
 			}
 
 			$id_unit_unit=$this->Set_unit_chart_model->get_by_id()->id_unit;
@@ -173,7 +233,7 @@ class Dashboard extends CI_Controller {
 			if (isset($dataset2))
 			$data['dataset2']=$dataset2;
 
-			print("<pre>".print_r($data['data_program'],true)."</pre>");
+			print("<pre>".print_r($data_program,true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Rektorat '.$this->tahun;
 			$data['title2'] = 'Realisasi Capaian Unit '.$this->tahun;
@@ -208,7 +268,7 @@ class Dashboard extends CI_Controller {
 			if (isset($dataset))
 			$data['dataset']=$dataset;
 			// print("<pre>".print_r($data['label'],true)."</pre>");
-			// print("<pre>".print_r($data['dataset'],true)."</pre>");
+			// print("<pre>".print_r($data['data_program'],true)."</pre>");
 
 			$data['title'] = 'Realisasi Capaian Program Dukungan Manajemen dan Pelaksanaan Tugas Teknis Lainnya Kementerian Riset, Teknologi dan Pendidikan Tinggi '.$this->tahun;
 		}

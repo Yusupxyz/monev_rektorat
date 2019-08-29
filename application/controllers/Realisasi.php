@@ -230,17 +230,17 @@ class Realisasi extends CI_Controller
             //update capaian kegiatan jenis 3/2
             $jenis=$this->Kegiatan_model->get_by_id_join($id_suboutput)->jenis;
             $kode=$this->Kegiatan_model->get_by_id_join($id_suboutput)->induk;
-            $this->update_capaian_kegiatan($jenis,$kode);
+            $this->update_capaian_kegiatan($jenis,$kode,$this->user->id_unit);
 
             // //update capaian kegiatan jenis 2/1
             $jenis2=$this->M_dat_model->get_by_id($kode)->jenis;
             $kode2=$this->M_dat_model->get_by_id($kode)->induk;
-            $this->update_capaian_kegiatan($jenis2,$kode2);
+            $this->update_capaian_kegiatan($jenis2,$kode2,$this->user->id_unit);
 
             // //update capaian kegiatan jenis 1/false
             $jenis3=$this->M_dat_model->get_by_id($kode2)->jenis;
             $kode3=$this->M_dat_model->get_by_id($kode2)->induk;
-            $this->update_capaian_kegiatan($jenis3,$kode3);
+            $this->update_capaian_kegiatan($jenis3,$kode3,$this->user->id_unit);
 
             //rektorat
             // //update capaian komponen dengan sum sub komponen unit
@@ -296,13 +296,13 @@ class Realisasi extends CI_Controller
         }
     }
 
-    private function update_capaian_kegiatan($jenis,$kode){
+    private function update_capaian_kegiatan($jenis,$kode,$id_unit){
         if ($jenis!=1){
             $id_unit= $this->user->id_unit;
             $data_kegiatan = array(
-                'rencana_capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_rencana,
-                'capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_realisasi,
-                'jumlah_capaian' => $this->Kegiatan_model->sum_by_induk($kode)->sum_jumlah
+                'rencana_capaian' => $this->Kegiatan_model->sum_by_induk($kode,$id_unit)->sum_rencana,
+                'capaian' => $this->Kegiatan_model->sum_by_induk($kode,$id_unit)->sum_realisasi,
+                'jumlah_capaian' => $this->Kegiatan_model->sum_by_induk($kode,$id_unit)->sum_jumlah
             );
             $this->Kegiatan_model->update_bykode($kode, $data_kegiatan,$id_unit);
         }
