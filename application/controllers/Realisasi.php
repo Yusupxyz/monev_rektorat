@@ -242,55 +242,6 @@ class Realisasi extends CI_Controller
             $kode3=$this->M_dat_model->get_by_id($kode2)->induk;
             $this->update_capaian_kegiatan($jenis3,$kode3,$this->user->id_unit);
 
-            //rektorat
-            // //update capaian komponen dengan sum sub komponen unit
-            //  $kode_komponen=$this->Sub_komponen_model->get_idkomponen($id_subkomponen)->kode;
-            //  $id_komponen_rektorat=$this->Komponen_model->get_by_kode_komponen($kode_komponen)->id_komponen;
-
-            // //  $id_komponen_rektorat=$this->Komponen_model->get_by_kode($kode_komponen)->id_komponen;
-            //  $child=$this->Sub_komponen_model->count_kode_komponen($kode_komponen)->jumlah;
-             
-            //  //sum rencana capaian unit ditambah sum rektorat
-            //  $rencana_capaian=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_rencana;
-
-            //  //sum capaian unit ditambah sum rektorat
-            //  $capaian=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_realisasi;
-             
-            //  //sum jumlah capaian unit ditambah sum rektorat
-            //  $jumlah_capaian=$this->Sub_komponen_model->sum_by_kodekomponen($kode_komponen)->sum_jumlah;
-
-            //  $data_subkomponen_rektorat = array(
-            //      'rencana_capaian' => $rencana_capaian/$child,
-            //      'capaian' => $capaian/$child,
-            //      'jumlah_capaian' => $jumlah_capaian
-            //  );
-            //  $this->Komponen_model->update($id_komponen_rektorat, $data_subkomponen_rektorat);
-
-            //update capaian sub_output rektorat
-            // $id_suboutput_rektorat=$this->Komponen_rektorat_model->get_idsuboutput($id_komponen_rektorat)->id_kegiatan;
-            // $child_id_suboutput=$this->Komponen_rektorat_model->count_id_suboutput($id_suboutput_rektorat)->jumlah;
-            // $data_komponen_rektorat = array(
-            //     'rencana_capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput_rektorat)->sum_rencana/$child_id_suboutput,
-            //     'capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput_rektorat)->sum_realisasi/$child_id_suboutput,
-            //     'jumlah_capaian' => $this->Komponen_rektorat_model->sum_by_idsuboutput($id_suboutput_rektorat)->sum_jumlah
-            // );
-            // $this->Kegiatan_rektorat_model->update($id_suboutput_rektorat, $data_komponen_rektorat);
-
-            // //update capaian kegiatan jenis 3/2
-            // $jenis_rektorat=$this->Kegiatan_rektorat_model->get_by_id_join($id_suboutput_rektorat)->jenis;
-            // $kode_rektorat=$this->Kegiatan_rektorat_model->get_by_id_join($id_suboutput_rektorat)->induk;
-            // $this->update_capaian_kegiatan_rektorat($jenis_rektorat,$kode_rektorat);
-
-            // //update capaian kegiatan jenis 2/1
-            // $jenis2_rektorat=$this->M_dat_model->get_by_id($kode_rektorat)->jenis;
-            // $kode2_rektorat=$this->M_dat_model->get_by_id($kode_rektorat)->induk;
-            // $this->update_capaian_kegiatan_rektorat($jenis2_rektorat,$kode2_rektorat);
-
-            // // //update capaian kegiatan jenis 1/false
-            // $jenis3_rektorat=$this->M_dat_model->get_by_id($kode2_rektorat)->jenis;
-            // $kode3_rektorat=$this->M_dat_model->get_by_id($kode2_rektorat)->induk;
-            // $this->update_capaian_kegiatan_rektorat($jenis3_rektorat,$kode3_rektorat);
-
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('realisasi/'.$this->input->post('id_subkomponen',TRUE)));
         }

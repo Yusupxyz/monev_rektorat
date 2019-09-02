@@ -12,34 +12,41 @@
     $(':checkbox[name=selectall]').click(function () {
         $(':checkbox[name=id]').prop('checked', this.checked);
     });
-
+    
+    
     $(document).ready(function(){
-        var waktu_rencana_awal = new Date('<?= $waktu_rencana->waktu_awal ?>');
-        var waktu_rencana_akhir   = new Date('<?= $waktu_rencana->waktu_akhir ?>');
-        var waktu_realisasi_awal = new Date('<?= $waktu_realisasi->waktu_awal ?>');
-        var waktu_realisasi_akhir   = new Date('<?= $waktu_realisasi->waktu_akhir ?>');
         var today = new Date();
-        console.log(waktu_rencana_awal);
-        console.log(waktu_rencana_akhir);
-        console.log(today);
+        var year = today.getFullYear();
 
-        if ((today >= waktu_rencana_awal && today <= waktu_rencana_akhir)) {
-            for(i=0;i<12;i++){
-                document.getElementById('rencana_capaian'+i).removeAttribute("readonly");
-                document.getElementById('ukuran_keberhasilan'+i).removeAttribute("readonly");
-            }
-        }
+        <?php if ($group_id==1 || $group_id==2 || $group_id==4){ ?>
+            if (<?= $tahun ?>==year) {
+                var waktu_rencana_awal = new Date('<?= $waktu_rencana->waktu_awal ?>');
+                var waktu_rencana_akhir   = new Date('<?= $waktu_rencana->waktu_akhir ?>');
+                var waktu_realisasi_awal = new Date('<?= $waktu_realisasi->waktu_awal ?>');
+                var waktu_realisasi_akhir   = new Date('<?= $waktu_realisasi->waktu_akhir ?>');
+                console.log(waktu_rencana_awal);
+                console.log(waktu_rencana_akhir);
+                console.log(today);
 
-        if ((today >= waktu_realisasi_awal && today <= waktu_realisasi_akhir)) {
-            for(i=0;i<12;i++){
-                document.getElementById('realisasi_capaian'+i).removeAttribute("readonly");
-                document.getElementById('realisasi_jumlah'+i).removeAttribute("readonly");
-                document.getElementById('uraian_hasil'+i).removeAttribute("readonly");
-                document.getElementById('kendala'+i).removeAttribute("readonly");
-                document.getElementById('keterangan'+i).removeAttribute("readonly");
+                if ((today >= waktu_rencana_awal && today <= waktu_rencana_akhir)) {
+                    for(i=0;i<12;i++){
+                        document.getElementById('rencana_capaian'+i).removeAttribute("readonly");
+                        document.getElementById('ukuran_keberhasilan'+i).removeAttribute("readonly");
+                    }
+                }
+
+                if ((today >= waktu_realisasi_awal && today <= waktu_realisasi_akhir)) {
+                    for(i=0;i<12;i++){
+                        document.getElementById('realisasi_capaian'+i).removeAttribute("readonly");
+                        document.getElementById('realisasi_jumlah'+i).removeAttribute("readonly");
+                        document.getElementById('uraian_hasil'+i).removeAttribute("readonly");
+                        document.getElementById('kendala'+i).removeAttribute("readonly");
+                        document.getElementById('keterangan'+i).removeAttribute("readonly");
+                    }
+                }
             }
-        }
-        
+            <?php } ?>
+
     });
 
     function cek(){
@@ -67,6 +74,5 @@
 
             });
         }
-    }
-
+      }
 </script>

@@ -11,7 +11,6 @@
               <i class="fa fa-refresh"></i></button>
           </div>
       </div>
-
       <div class="box-body">
         <div class="row" style="margin-bottom: 10px">
         <div class=" col-xs-12 col-md-6">
@@ -36,7 +35,6 @@
             </div>
             <div class="col-md-4 text-center">
                 <div style="margin-top: 8px" id="message">
-                    
                 </div>
             </div>
             <div class="col-md-1 text-right">

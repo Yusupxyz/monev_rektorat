@@ -108,10 +108,12 @@
               </div>
             </div>
 
+            <?php if (isset($labels)) { ?>
             <div class="box-body" style="min-height: 150px">
               <div class="chart">
                 <canvas id="barChart" style="height:270px"></canvas>
               </div>
+              
             </div>
             <div style="padding-left: 10px;">
             <div class="panel panel-default" style="display:inline-block;">
@@ -122,6 +124,16 @@
                   </div>
               </div>
               </div>
+            <?php }else{ ?>
+              <div class="box-body" style="min-height: 150px;text-align:center;">
+              <div class="text-primary font-weight-bolder" >
+                <h2><i>"Data masih kosong"</i></h2>
+                <img src="<?php echo base_url();?>assets/img/empty_doc.png" alt="Empty Data" height="300" width="300">
+
+              </div>
+              
+            </div>
+            <?php } ?>
             <!-- /.box-body -->
             <div class="box-footer">
             </div>
@@ -158,6 +170,7 @@
               </div>
             </div>
 
+            <?php if (isset($labels)) { ?>
             <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box bg-aqua">
             <span class="info-box-icon"><i class="fas fa-users"></i></span>
@@ -245,6 +258,7 @@
               <div class="chart">
                 <canvas id="barChart2" style="height:270px"></canvas>
               </div>
+             
             </div>
 
             <div style="padding-left: 10px;">
@@ -256,8 +270,16 @@
                   </div>
               </div>
             </div>
+            <?php }else{ ?>
+              <div class="box-body" style="min-height: 150px;text-align:center;">
+              <div class="text-primary font-weight-bolder" >
+                <h2><i>"Data masih kosong"</i></h2>
+                <img src="<?php echo base_url();?>assets/img/empty_doc.png" alt="Empty Data" height="300" width="300">
+
+              </div>
               
-              
+            </div>
+            <?php } ?>
 
             <!-- /.box-body -->
             <div class="box-footer">
