@@ -59,9 +59,11 @@
 		<th>Kode</th>
 		<th>Uraian Kegiatan</th>
 		<th>Jumlah Pagu</th>
-		<th>Rencana Capaian</th>
-		<th>Realisasi Capaian Fisik</th>
-		<th>Realisasi Jumlah Capaian</th>
+        <th>Realisasi Anggaran</th>
+        <th>Serapan</th>
+		<th>Rencana Capaian Fisik</th>
+        <th>Realisasi Capaian Fisik</th>
+        <th>Status Realiasi</th>
 		<th>Action</th>
             </tr><?php
             $i=0;
@@ -71,6 +73,10 @@
             {
                 $jumlah = $kegiatan->jumlah;
                 $jumlah_capaian = $kegiatan->jumlah_capaian;
+                $a_kegiatan = @(round($jumlah_capaian/$jumlah * 100,2));
+                if ($kegiatan->rencana_capaian!=0)
+                    $a_kegiatan_realiasi =number_format((($kegiatan->capaian / $kegiatan->rencana_capaian) * 1/100),3);
+                else $a_kegiatan_realiasi =number_format(($kegiatan->capaian * 1/100),3);
                 ?>
                 <tr>
                 
@@ -81,9 +87,11 @@
 			<td><?php echo $kegiatan->kode_m_dat ?></td>
 			<td><?php echo $kegiatan->ket ?></td>
 			<td><?php echo "Rp.".nominal($jumlah).""; ?></td>
+            <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+            <td style="text-align:center"><?php echo $a_kegiatan."%";?></td>
 			<td style="text-align:center"><?php echo $kegiatan->rencana_capaian."%" ?></td>
-			<td style="text-align:center"><?php echo $kegiatan->capaian."%" ?></td>
-			<td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+            <td style="text-align:center"><?php echo $kegiatan->capaian."%" ?></td>
+            <td style="text-align:center"><?php echo $a_kegiatan_realiasi."%"; ?></td>
             <td style="text-align:center" width="200px">
                 <!-- create komponen -->
                 <?php  if ($group_id==""){
@@ -107,6 +115,10 @@
                             foreach ($komponen[$i] as $key => $value) { 
                                 $jumlah = $value->jumlah; 
                                 $jumlah_capaian = $value->jumlah_capaian;
+                                $a_komponen = @(round($jumlah_capaian/$jumlah * 100,2));
+                                if ($value->rencana_capaian!=0)
+                                    $a_komponen_realiasi =number_format((($value->capaian / $value->rencana_capaian) * 1/100),3);
+                                else $a_komponen_realiasi =number_format(($value->capaian * 1/100),3);
                                 ?>
                         <tr>
                             <td></td>
@@ -114,9 +126,11 @@
                             <td><?php echo $value->kode_komponen; ?></td>
                             <td><?php echo $value->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
+                            <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td style="text-align:center"><?php echo $a_komponen."%";?></td>
                             <td style="text-align:center"><?php echo $value->rencana_capaian."%" ?></td>
                             <td style="text-align:center"><?php echo $value->capaian."%" ?></td>
-                            <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td style="text-align:center"><?php echo $a_komponen_realiasi."%";?></td>
                             <td style="text-align:center" width="200px">
                             <!-- create subkomponen -->
                             <?php if ($group_id==""){
@@ -141,6 +155,11 @@
                             foreach ($subkomponen[$j] as $key => $value1) { 
                             $jumlah = $value1->jumlah; 
                             $jumlah_capaian = $value1->jumlah_capaian;
+                            $a_subkomponen = @(round($jumlah_capaian/$jumlah * 100,2));
+                            $a_subkomponen_realiasi = @(round($value1->capaian - $value1->rencana_capaian / 100,2));
+                            if ($value1->rencana_capaian!=0)
+                                $a_subkomponen_realiasi =number_format((($value1->capaian / $value1->rencana_capaian) * 1/100),3);
+                            else $a_subkomponen_realiasi =number_format(($value1->capaian * 1/100),3);
                             ?>
                         <tr>
                             <td></td>
@@ -148,9 +167,11 @@
                             <td><?php echo $value1->kode_subkomponen; ?></td>
                             <td><?php echo $value1->uraian_kegiatan; ?></td>
                             <td><?php echo "Rp.".nominal($jumlah).""; ?></td>
+                            <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td style="text-align:center"><?php echo $a_subkomponen."%";?></td>
                             <td style="text-align:center"><?php echo $value1->rencana_capaian."%" ?></td>
                             <td style="text-align:center"><?php echo $value1->capaian."%" ?></td>
-                            <td><?php echo "Rp.".nominal($jumlah_capaian).""; ?></td>
+                            <td style="text-align:center"><?php echo $a_subkomponen_realiasi."%";?></td>
                             <td style="text-align:center" width="200px">
                             <?php if ($group_id==""){
                                 echo anchor(site_url('kegiatan/update_subkomponen/'.$value1->id_unit.'/'.$value1->id_subkomponen),' <i class="fa fa-edit"></i>', 'class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit"'); 
@@ -167,7 +188,7 @@
                         </tr> 
                         
                    <?php
-                        }}                        }
+                        }}   }
                     }
                     $j++;
                 }

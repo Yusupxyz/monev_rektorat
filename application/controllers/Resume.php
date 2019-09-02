@@ -754,7 +754,7 @@ class Resume extends CI_Controller
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
-    public function export($id_unit)
+    public function export()
     {
         // Load plugin PHPExcel nya
         include APPPATH . 'third_party/PHPExcel-1.8/Classes/PHPExcel.php';
@@ -834,7 +834,7 @@ class Resume extends CI_Controller
         $excel->getActiveSheet()->getStyle('E1')->applyFromArray($style_col);
         $excel->getActiveSheet()->getStyle('F1')->applyFromArray($style_col);
         // Panggil function view yang ada di SiswaModel untuk menampilkan semua data siswanya
-        $b = $id_unit;
+        $b = 0;
         $kegiatan = $this->Kegiatan_model->get_limit_data('1000', '0', null, $b, $this->tahun);
         for ($i = 0; $i < $this->Kegiatan_model->count_kegiatan($b, $this->tahun)->count; $i++) {
             $count_child[] = $this->Kegiatan_model->count_child($i, $b, $this->tahun);
@@ -842,23 +842,185 @@ class Resume extends CI_Controller
         }
 
         for ($i = 0; $i < $this->Komponen_model->count_komponen($b)->count; $i++) {
-            $count_child_komponen[] = $this->Komponen_model->count_child($i, $b);
-            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen($i, $b, $this->tahun);
+            $count_child_komponen[] = $this->Komponen_model->count_child_resume($i, $b);
+            $subkomponen[] = $this->Sub_komponen_model->get_by_id_komponen_resume($i,  $this->tahun,$b);
+            $count_child_komponen_unit[] =$this->Komponen_model->count_child_unit($i);
+            $subkomponenunit[] = $this->Sub_komponen_model->get_by_id_komponen_rektorat($i,$b,$this->tahun);
         }
-        // var_dump($count_child_komponen);
+
+        if (isset($kegiatan)){
+            foreach ($kegiatan as $key ) { 
+                $data_jumlah_kegiatan[]=$this->Kegiatan_model->sum_jumlah($key->kode_m_dat);
+            }
+        }
+        if (isset($komponen)){
+            for ($j=0; $j < count($komponen) ; $j++) { 
+                    if (isset($komponen[$j][0])){ 
+                        foreach ($komponen[$j] as $key => $value) { 
+                            if ($this->Komponen_model->count_kode_komponen($value->kode_komponen)->count==0){
+                                $data_jumlah[$j][]=$this->Komponen_model->get_data_by_kode($value->id_komponen);
+                            }else{
+                                $data_jumlah[$j][]=$this->Sub_komponen_model->get_data_by_kode($value->kode_komponen);
+                            }
+                            $count_jumlah[$j][]=$this->Sub_komponen_model->count_by_kode($value->kode_komponen);
+                            $jenis[$j][]=$data_jumlah_kegiatan[$j]->jenis;
+                        }
+                    }else{
+                        $data_jumlah[$j]='';
+                        $count_jumlah[$j]='';
+                        $jenis[$j][]='';
+                    }
+                }
+            
+            for ($i=0; $i < count($data_jumlah) ; $i++) { 
+                $jumlah_rc=0;
+                $jumlah_c=0;
+                if ($data_jumlah[$i]!=null){
+                    for ($j=0; $j < count($data_jumlah[$i]) ; $j++) { 
+                        $jumlah_rc=$jumlah_rc+round($data_jumlah[$i][$j]->rc/$count_jumlah[$i][$j]->jumlah);
+                        $jumlah_c=$jumlah_c+round($data_jumlah[$i][$j]->c/$count_jumlah[$i][$j]->jumlah);
+                    }
+                     $jumlah_rc=round($jumlah_rc/count($data_jumlah[$i]));
+                     $jumlah_c=round($jumlah_c/count($data_jumlah[$i]));
+                }
+                $data_suboutput[$i]['jc']=$jumlah_rc;
+                $data_suboutput[$i]['c']=$jumlah_c;
+            }
+            
+            $i=0;
+            foreach ($kegiatan as $key ) {
+                $jumlah_rc=0;
+                $jumlah_c=0;
+                if ($key->jenis==3){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==4 && $key2->induk==$temp){
+                            $jumlah_rc=$jumlah_rc+$data_suboutput[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_suboutput[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_subprogram[$i]['jc']=$jumlah_rc;
+                    $data_subprogram[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_subprogram[$i]['jc']=$jumlah_rc;
+                    $data_subprogram[$i++]['c']=$jumlah_c;
+                }
+            }
+
+            $i=0;
+            foreach ($kegiatan as $key ) {
+                $jumlah_rc=0;
+                $jumlah_c=0;
+                if ($key->jenis==2){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==3 && $key2->induk==$temp){
+                            $jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_program[$i]['jc']=$jumlah_rc;
+                    $data_program[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_program[$i]['jc']=$jumlah_rc;
+                    $data_program[$i++]['c']=$jumlah_c;
+                }
+            }
+
+            $i=0;
+            foreach ($kegiatan as $key ) {
+                $jumlah_rc=0;
+                $jumlah_c=0;
+                if ($key->jenis==2){
+                    $temp=$key->kode_m_dat;
+                    $j=0;
+                    foreach ($kegiatan as $key2) {
+                        if ($key2->jenis==3){
+                            $jumlah_rc=$jumlah_rc+$data_subprogram[$j]['jc'];
+                            $jumlah_c=$jumlah_c+$data_subprogram[$j]['c'];
+                        }
+                        $j++;
+                    }
+                    $data_program_backup[$i]['jc']=$jumlah_rc;
+                    $data_program_backup[$i++]['c']=$jumlah_c;
+                }else{
+                    $data_program_backup[$i]['jc']=$jumlah_rc;
+                    $data_program_backup[$i++]['c']=$jumlah_c;
+                }
+            }
+        }
+
+        // if (isset($count_child))
+        //     $data['count_child'] = $count_child;
+        // if (isset($count_child_komponen))
+        //     $data['count_child_komponen'] = $count_child_komponen;
+        // if (isset($count_child_komponen_unit))
+        //     $data['count_child_komponen_unit'] = $count_child_komponen_unit;
+        // if (isset($komponen))
+        //     $data['komponen'] = $komponen;
+        // if (isset($subkomponen))
+        //     $data['subkomponen'] = $subkomponen;
+        // if (isset($subkomponenunit))
+        //     $data['subkomponenunit'] = $subkomponenunit;
+        // if (isset($data_jumlah))
+        //     $data['data_komponen'] = $data_jumlah;
+        // if (isset($data_jumlah_kegiatan))
+        //     $data['data_jumlah_kegiatan'] = $data_jumlah_kegiatan;
+        // if (isset($data_suboutput))
+        //     $data['data_suboutput'] = $data_suboutput;
+        // if (isset($data_program_backup))
+        //     $data['data_program_induk'] = $data_program_backup;
+        // if (isset($data_program))
+        //     $data['data_program'] = $data_program;
+        // if (isset($data_subprogram))
+        //     $data['data_subprogram'] = $data_subprogram;
+        // if (isset($count_jumlah))
+        //     $data['count_jumlah'] = $count_jumlah;
+        
+        // var_dump($data_jumlah_kegiatan);
         $numrow = 2; // Set baris pertama untuk isi tabel adalah baris ke 4
         $i = 0; // array cek komponen
         $j = 0; // array cek subkomponen
+        $jc=0;
+        $c=0;
         //data kegiatan rektorat
         foreach ($kegiatan as $data) { // Lakukan looping pada variabel kegiatan rektorat
-            $rencana_capaian = $data->rencana_capaian / 100;
-            $capaian = $data->rencana_capaian / 100;
+            $jumlah = $data_jumlah_kegiatan[$i]->jumlah;
+            $jumlah_capaian = $data_jumlah_kegiatan[$i]->jc;
+                if ($data->jenis==1){
+                    if (isset($data_program[$i])){
+                        $jc = $data_program_backup[1]['jc']; 
+                        $c = $data_program_backup[1]['c']; 
+                    }
+                }elseif ($data->jenis==2) {
+                    if (isset($data_program[$i])){
+                        $jc = $data_program[$i]['jc']; 
+                        $c = $data_program[$i]['c']; 
+                    }
+                } elseif ($data->jenis==3) {
+                    if (isset($data_subprogram[$i])){
+                        $jc = $data_subprogram[$i]['jc']; 
+                        $c = $data_subprogram[$i]['c']; 
+                    }
+                }else{
+                    if (isset($data_suboutput[$i])){
+                        $jc = $data_suboutput[$i]['jc']; 
+                        $c = $data_suboutput[$i]['c']; 
+                    }
+                }
+
+            // $rencana_capaian = $data->rencana_capaian / 100;
+            // $capaian = $data->rencana_capaian / 100;
             $excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $data->kode_m_dat);
             $excel->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $data->ket);
-            $excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $data->jumlah);
-            $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $rencana_capaian);
-            $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $capaian);
-            $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $data->jumlah_capaian);
+            $excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $jumlah);
+            $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $jc);
+            $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $c);
+            $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $jumlah_capaian);
 
             // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
             $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
@@ -872,15 +1034,25 @@ class Resume extends CI_Controller
             // data komponen rektorat
             if ($count_child[$i]->jumlah_anak == '0') {
                 if (isset($komponen[$i][0])) {
+                    $v=0;
                     foreach ($komponen[$i] as $data => $value) { // Lakukan looping pada variabel komponen rektorat
-                        $rencana_capaian = $value->rencana_capaian / 100;
-                        $capaian = $value->rencana_capaian / 100;
+                        $jumlah = $data_jumlah[$i][$v]->jumlah; 
+                        $jumlah_capaian = $data_jumlah[$i][$v]->jc; 
+                        if ($count_jumlah[$i][$v]->jumlah!=0){
+                            $jck=round($data_jumlah[$i][$v]->rc/$count_jumlah[$i][$v]->jumlah);
+                            $ck=round($data_jumlah[$i][$v]->c/$count_jumlah[$i][$v++]->jumlah);
+                        }else{
+                            $jck=0;
+                            $ck=0;
+                        }
+                        // $rencana_capaian = $value->rencana_capaian / 100;
+                        // $capaian = $value->rencana_capaian / 100;
                         $excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $value->kode_komponen);
                         $excel->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $value->uraian_kegiatan);
-                        $excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $value->jumlah);
-                        $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $rencana_capaian);
-                        $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $capaian);
-                        $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $value->jumlah_capaian);
+                        $excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $jumlah);
+                        $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $jck);
+                        $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $ck);
+                        $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $jumlah_capaian);
 
                         // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
                         $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
@@ -904,6 +1076,35 @@ class Resume extends CI_Controller
                                     $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $rencana_capaian);
                                     $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $capaian);
                                     $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $value_sub->jumlah_capaian);
+
+                                    // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
+                                    $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
+                                    $excel->getActiveSheet()->getStyle('B' . $numrow)->applyFromArray($style_row);
+                                    $excel->getActiveSheet()->getStyle('C' . $numrow)->applyFromArray($style_row3);
+                                    $excel->getActiveSheet()->getStyle('D' . $numrow)->applyFromArray($style_row2);
+                                    $excel->getActiveSheet()->getStyle('E' . $numrow)->applyFromArray($style_row2);
+                                    $excel->getActiveSheet()->getStyle('F' . $numrow)->applyFromArray($style_row3);
+
+                                    $numrow++; // Tambah 1 setiap kali looping 
+
+                                }
+                            }
+                        }
+
+                        $numrow++; // Tambah 1 setiap kali looping 
+
+                        // data sub komponen rektorat
+                        if ($count_child_komponen_unit[$j]->jumlah_anak != '0') {
+                            if (isset($subkomponenunit[$j][0])) {
+                                foreach ($subkomponenunit[$j] as $data => $value_subunit) { // Lakukan looping pada variabel sub komponen rektorat  
+                                    $rencana_capaian = $value_subunit->rencana_capaian / 100;
+                                    $capaian = $value_subunit->rencana_capaian / 100;
+                                    $excel->setActiveSheetIndex(0)->setCellValue('A' . $numrow, $value_subunit->kode_subkomponen);
+                                    $excel->setActiveSheetIndex(0)->setCellValue('B' . $numrow, $value_subunit->uraian_kegiatan);
+                                    $excel->setActiveSheetIndex(0)->setCellValue('C' . $numrow, $value_subunit->jumlah);
+                                    $excel->setActiveSheetIndex(0)->setCellValue('D' . $numrow, $rencana_capaian);
+                                    $excel->setActiveSheetIndex(0)->setCellValue('E' . $numrow, $capaian);
+                                    $excel->setActiveSheetIndex(0)->setCellValue('F' . $numrow, $value_subunit->jumlah_capaian);
 
                                     // Apply style row yang telah kita buat tadi ke masing-masing baris (isi tabel)
                                     $excel->getActiveSheet()->getStyle('A' . $numrow)->applyFromArray($style_row);
